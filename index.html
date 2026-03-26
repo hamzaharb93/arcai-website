@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ARCAI — AI-Native Veterinary Clinical Software</title>
+    <meta name="description" content="The AI-native clinical ecosystem for veterinary medicine. Three purpose-built iPadOS apps for anesthesia, dental, and inpatient care — built by a practicing veterinary anesthesiologist.">
+    <meta property="og:title" content="ARCAI — The Future of Veterinary Medicine is AI-Native">
+    <meta property="og:description" content="Three purpose-built iPadOS apps that cover every stage of a patient's clinical journey, with AI reasoning embedded at every step.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://arcai.vet">
+    <meta property="og:image" content="https://arcai.vet/screenshots/anesthesia-monitor-ai.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="ARCAI — AI-Native Veterinary Clinical Software">
+    <meta name="twitter:description" content="Three purpose-built iPadOS apps for anesthesia, dental, and inpatient care.">
+    <meta name="theme-color" content="#06090C">
+    <link rel="canonical" href="https://arcai.vet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #06090C;
+            --bg-secondary: #0D1117;
+            --bg-card: #111820;
+            --text-primary: #F0F2F5;
+            --text-secondary: rgba(240, 242, 245, 0.6);
+            --text-muted: rgba(240, 242, 245, 0.3);
+            --brand-navy: #0F1923;
+            --anesthesia: #0D7377;
+            --anesthesia-light: #14BDBD;
+            --dental: #1A6FE8;
+            --dental-light: #4D9FFF;
+            --inpatient: #C47A1E;
+            --inpatient-light: #F0A93A;
+            --accent-green: #0A9A5C;
+            --border: rgba(255, 255, 255, 0.06);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* ═══════════════════ NAVIGATION ═══════════════════ */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            padding: 20px 48px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(6, 9, 12, 0.7);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border-bottom: 1px solid var(--border);
+            transition: padding 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        nav.scrolled {
+            padding: 12px 48px;
+        }
+
+        .nav-logo {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 5px;
+            color: var(--text-primary);
+            text-decoration: none;
+            display: flex;
+            align-items: baseline;
+            gap: 2px;
+        }
+
+        .nav-logo .dot-vet {
+            font-size: 13px;
+            font-weight: 400;
+            letter-spacing: 1px;
+            opacity: 0.35;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 36px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--text-primary); }
+
+        .nav-cta {
+            background: rgba(255, 255, 255, 0.08) !important;
+            color: var(--text-primary) !important;
+            padding: 10px 24px !important;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s !important;
+        }
+
+        .nav-cta:hover {
+            background: rgba(255, 255, 255, 0.14) !important;
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Mobile menu button */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+        }
+
+        .menu-toggle span {
+            display: block;
+            width: 20px;
+            height: 1.5px;
+            background: var(--text-primary);
+            margin: 5px 0;
+            transition: all 0.3s;
+        }
+
+        /* ═══════════════════ HERO ═══════════════════ */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 160px 48px 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* <!-- HIGGSFIELD VIDEO PLACEHOLDER --> */
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            z-index: 0;
+        }
+
+        .hero-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 80% 60% at 50% 30%, rgba(13, 115, 119, 0.07) 0%, transparent 70%),
+                        radial-gradient(ellipse 60% 40% at 30% 60%, rgba(26, 111, 232, 0.04) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        .hero > * {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 20px;
+            border-radius: 100px;
+            border: 1px solid rgba(10, 154, 92, 0.2);
+            background: rgba(10, 154, 92, 0.06);
+            font-size: 11px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: rgba(240, 242, 245, 0.5);
+            margin-bottom: 40px;
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards 0.2s;
+        }
+
+        .hero-badge .pulse-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            position: relative;
+        }
+
+        .hero-badge .pulse-dot::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            background: var(--accent-green);
+            opacity: 0;
+            animation: pulseRing 2s ease-out infinite;
+        }
+
+        .hero h1 {
+            font-size: clamp(40px, 5.5vw, 76px);
+            font-weight: 800;
+            line-height: 1.06;
+            letter-spacing: -2.5px;
+            max-width: 860px;
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards 0.4s;
+        }
+
+        .hero h1 .gradient-text {
+            background: linear-gradient(135deg, var(--anesthesia-light) 0%, var(--dental-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-sub {
+            font-size: 17px;
+            color: var(--text-secondary);
+            max-width: 540px;
+            line-height: 1.75;
+            margin-top: 28px;
+            font-weight: 400;
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards 0.6s;
+        }
+
+        .hero-cta-group {
+            display: flex;
+            gap: 16px;
+            margin-top: 44px;
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards 0.8s;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 36px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+            font-family: inherit;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(255, 255, 255, 0.15);
+        }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px 36px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 600;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            cursor: pointer;
+            background: transparent;
+            color: var(--text-primary);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+            font-family: inherit;
+        }
+
+        .btn-secondary:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .hero-acronym {
+            margin-top: 56px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards 1s;
+        }
+
+        /* ═══════════════════ HERO SCREENSHOT ═══════════════════ */
+        .showcase {
+            padding: 0 48px 140px;
+            position: relative;
+        }
+
+        .showcase-frame {
+            max-width: 1100px;
+            margin: 0 auto;
+            border-radius: 20px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+            opacity: 0;
+            animation: fadeScale 1s ease forwards 1.2s;
+        }
+
+        .showcase-frame::after {
+            content: '';
+            position: absolute;
+            inset: -1px;
+            border-radius: 20px;
+            pointer-events: none;
+            box-shadow: 0 60px 140px rgba(0, 0, 0, 0.7),
+                        0 0 100px rgba(13, 115, 119, 0.06),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .showcase-frame img {
+            width: 100%;
+            display: block;
+        }
+
+        /* ═══════════════════ STATS BAR ═══════════════════ */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            max-width: 1100px;
+            margin: 0 auto 140px;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+        }
+
+        .stat {
+            padding: 44px 32px;
+            text-align: center;
+            position: relative;
+        }
+
+        .stat:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 20%;
+            height: 60%;
+            width: 1px;
+            background: var(--border);
+        }
+
+        .stat-number {
+            font-size: 40px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            margin-bottom: 8px;
+            background: linear-gradient(180deg, var(--text-primary) 0%, rgba(240, 242, 245, 0.6) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        /* ═══════════════════ SECTION HEADERS ═══════════════════ */
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+
+        .section-tag {
+            font-size: 11px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .section-title {
+            font-size: clamp(30px, 3.8vw, 48px);
+            font-weight: 700;
+            letter-spacing: -1.5px;
+            line-height: 1.15;
+            margin-bottom: 20px;
+        }
+
+        .section-sub {
+            font-size: 16px;
+            color: var(--text-secondary);
+            max-width: 520px;
+            margin: 0 auto;
+            line-height: 1.75;
+        }
+
+        /* ═══════════════════ APPS SECTION ═══════════════════ */
+        .apps-section {
+            padding: 0 48px 120px;
+            position: relative;
+        }
+
+        /* <!-- HIGGSFIELD VIDEO PLACEHOLDER --> */
+        .apps-video-bg {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .app-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 64px;
+            align-items: center;
+            max-width: 1100px;
+            margin: 0 auto 100px;
+            padding: 64px;
+            border-radius: 24px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .app-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+        }
+
+        .app-card.anesthesia::before { background: linear-gradient(90deg, transparent 10%, var(--anesthesia) 50%, transparent 90%); }
+        .app-card.dental::before { background: linear-gradient(90deg, transparent 10%, var(--dental) 50%, transparent 90%); }
+        .app-card.inpatient::before { background: linear-gradient(90deg, transparent 10%, var(--inpatient) 50%, transparent 90%); }
+
+        .app-card.anesthesia::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 200px;
+            background: radial-gradient(ellipse, rgba(13, 115, 119, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .app-card.dental::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 200px;
+            background: radial-gradient(ellipse, rgba(26, 111, 232, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .app-card.inpatient::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 200px;
+            background: radial-gradient(ellipse, rgba(196, 122, 30, 0.06) 0%, transparent 70%);
+            pointer-events: none;
+        }
+
+        .app-card.reverse { direction: rtl; }
+        .app-card.reverse > * { direction: ltr; }
+
+        .app-info .app-tag {
+            display: inline-block;
+            padding: 5px 14px;
+            border-radius: 6px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .anesthesia .app-tag { background: rgba(13, 115, 119, 0.12); color: var(--anesthesia-light); }
+        .dental .app-tag { background: rgba(26, 111, 232, 0.12); color: var(--dental-light); }
+        .inpatient .app-tag { background: rgba(196, 122, 30, 0.12); color: var(--inpatient-light); }
+
+        .app-info h3 {
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 16px;
+        }
+
+        .app-info p {
+            font-size: 15px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 28px;
+        }
+
+        .app-features {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .app-features li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            font-weight: 450;
+        }
+
+        .app-features li .check {
+            width: 20px;
+            height: 20px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            flex-shrink: 0;
+        }
+
+        .anesthesia .check { background: rgba(13, 115, 119, 0.15); color: var(--anesthesia-light); }
+        .dental .check { background: rgba(26, 111, 232, 0.15); color: var(--dental-light); }
+        .inpatient .check { background: rgba(196, 122, 30, 0.15); color: var(--inpatient-light); }
+
+        .app-screenshot {
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.4);
+        }
+
+        .app-screenshot img {
+            width: 100%;
+            display: block;
+        }
+
+        .coming-soon-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 360px;
+            background: linear-gradient(135deg, rgba(196, 122, 30, 0.06), rgba(240, 169, 58, 0.03));
+            border: 1px solid rgba(196, 122, 30, 0.12);
+            border-radius: 16px;
+            text-align: center;
+            padding: 48px;
+        }
+
+        .coming-soon-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
+            background: rgba(196, 122, 30, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .coming-soon-icon svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--inpatient-light);
+            fill: none;
+            stroke-width: 1.5;
+        }
+
+        .coming-soon-label {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--inpatient-light);
+            margin-bottom: 8px;
+        }
+
+        .coming-soon-date {
+            font-size: 13px;
+            color: var(--text-muted);
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 1px;
+        }
+
+        /* ═══════════════════ AI ENGINE SECTION ═══════════════════ */
+        .ai-section {
+            padding: 120px 48px;
+            position: relative;
+        }
+
+        .ai-section::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(26, 111, 232, 0.04) 0%, transparent 65%);
+            pointer-events: none;
+        }
+
+        .ai-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            max-width: 1100px;
+            margin: 64px auto 0;
+        }
+
+        .ai-card {
+            padding: 40px 36px;
+            border-radius: 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            text-align: left;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .ai-card:hover {
+            border-color: rgba(255, 255, 255, 0.08);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .ai-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 24px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .ai-icon svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--anesthesia-light);
+            fill: none;
+            stroke-width: 1.5;
+        }
+
+        .ai-card h4 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            letter-spacing: -0.2px;
+        }
+
+        .ai-card p {
+            font-size: 13.5px;
+            color: var(--text-secondary);
+            line-height: 1.75;
+        }
+
+        /* ═══════════════════ FOUNDER SECTION ═══════════════════ */
+        .founder {
+            padding: 120px 48px;
+            position: relative;
+        }
+
+        .founder-inner {
+            max-width: 760px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .founder-divider {
+            width: 48px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--anesthesia), transparent);
+            margin: 0 auto 48px;
+        }
+
+        .founder-quote {
+            font-size: 22px;
+            font-weight: 300;
+            line-height: 1.75;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-bottom: 40px;
+        }
+
+        .founder-quote em {
+            color: var(--text-primary);
+            font-weight: 500;
+            font-style: normal;
+        }
+
+        .founder-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--text-primary);
+            letter-spacing: 0.3px;
+        }
+
+        .founder-title {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        /* ═══════════════════ CTA SECTION ═══════════════════ */
+        .cta-section {
+            padding: 80px 48px 140px;
+        }
+
+        .cta-box {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 80px 72px;
+            border-radius: 28px;
+            background: linear-gradient(135deg, rgba(13, 115, 119, 0.07) 0%, rgba(26, 111, 232, 0.07) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 10%, rgba(20, 189, 189, 0.3) 50%, transparent 90%);
+        }
+
+        .cta-box h2 {
+            font-size: 36px;
+            font-weight: 700;
+            letter-spacing: -1px;
+            margin-bottom: 16px;
+        }
+
+        .cta-box .cta-subtitle {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 36px;
+            line-height: 1.7;
+        }
+
+        .cta-form {
+            display: flex;
+            gap: 12px;
+            max-width: 440px;
+            margin: 0 auto;
+        }
+
+        .cta-form input {
+            flex: 1;
+            padding: 15px 20px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(255, 255, 255, 0.04);
+            color: white;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .cta-form input:focus {
+            border-color: var(--anesthesia);
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .cta-form input::placeholder { color: var(--text-muted); }
+
+        /* ═══════════════════ FOOTER ═══════════════════ */
+        footer {
+            padding: 40px 48px;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .footer-left {
+            font-size: 12px;
+            color: var(--text-muted);
+            letter-spacing: 0.3px;
+        }
+
+        .footer-right {
+            display: flex;
+            gap: 28px;
+        }
+
+        .footer-right a {
+            font-size: 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s;
+            letter-spacing: 0.3px;
+        }
+
+        .footer-right a:hover { color: var(--text-secondary); }
+
+        /* ═══════════════════ ANIMATIONS ═══════════════════ */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(28px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeScale {
+            from { opacity: 0; transform: scale(0.96) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        @keyframes pulseRing {
+            0% { opacity: 0.6; transform: scale(1); }
+            100% { opacity: 0; transform: scale(2.5); }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(48px);
+            transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 { transition-delay: 0.1s; }
+        .reveal-delay-2 { transition-delay: 0.2s; }
+        .reveal-delay-3 { transition-delay: 0.3s; }
+
+        /* ═══════════════════ RESPONSIVE ═══════════════════ */
+        @media (max-width: 1024px) {
+            .ai-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                padding: 16px 24px;
+            }
+
+            nav.scrolled {
+                padding: 12px 24px;
+            }
+
+            .nav-links {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(6, 9, 12, 0.97);
+                backdrop-filter: blur(24px);
+                -webkit-backdrop-filter: blur(24px);
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 32px;
+                z-index: 999;
+            }
+
+            .nav-links.open {
+                display: flex;
+            }
+
+            .nav-links a {
+                font-size: 18px;
+            }
+
+            .nav-links .nav-cta {
+                padding: 14px 32px !important;
+                font-size: 16px;
+            }
+
+            .menu-toggle {
+                display: block;
+                z-index: 1001;
+            }
+
+            .menu-toggle.open span:nth-child(1) {
+                transform: rotate(45deg) translate(4px, 5px);
+            }
+            .menu-toggle.open span:nth-child(2) {
+                opacity: 0;
+            }
+            .menu-toggle.open span:nth-child(3) {
+                transform: rotate(-45deg) translate(4px, -5px);
+            }
+
+            .hero {
+                padding: 130px 24px 60px;
+                min-height: auto;
+            }
+
+            .hero h1 {
+                font-size: 34px;
+                letter-spacing: -1px;
+            }
+
+            .hero-sub { font-size: 15px; }
+
+            .hero-cta-group {
+                flex-direction: column;
+                width: 100%;
+                max-width: 280px;
+            }
+
+            .hero-cta-group .btn-primary,
+            .hero-cta-group .btn-secondary {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .showcase { padding: 0 20px 80px; }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+                margin: 0 20px 80px;
+                border-radius: 12px;
+            }
+
+            .stat { padding: 28px 20px; }
+            .stat-number { font-size: 28px; }
+            .stat:nth-child(2)::after { display: none; }
+
+            .apps-section { padding: 0 20px 60px; }
+
+            .app-card {
+                grid-template-columns: 1fr;
+                padding: 32px 28px;
+                gap: 32px;
+                margin-bottom: 40px;
+            }
+
+            .app-card.reverse { direction: ltr; }
+
+            .app-info h3 { font-size: 24px; }
+
+            .ai-section { padding: 80px 20px; }
+            .ai-grid { grid-template-columns: 1fr; gap: 16px; }
+            .ai-card { padding: 32px 28px; }
+
+            .founder { padding: 80px 24px; }
+            .founder-quote { font-size: 18px; }
+
+            .cta-section { padding: 40px 20px 80px; }
+            .cta-box { padding: 48px 28px; border-radius: 20px; }
+            .cta-box h2 { font-size: 28px; }
+            .cta-form { flex-direction: column; }
+
+            footer { padding: 32px 24px; }
+            .footer-inner {
+                flex-direction: column;
+                gap: 16px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 420px) {
+            .hero h1 { font-size: 28px; letter-spacing: -0.5px; }
+            .hero-acronym { font-size: 9px; letter-spacing: 2px; }
+            .stat-number { font-size: 24px; }
+            .section-title { font-size: 26px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ═══════════════════ NAVIGATION ═══════════════════ -->
+<nav>
+    <a href="#" class="nav-logo">ARCAI<span class="dot-vet">.vet</span></a>
+    <div class="nav-links" id="navLinks">
+        <a href="#apps" onclick="closeMenu()">Apps</a>
+        <a href="#ai" onclick="closeMenu()">AI Engine</a>
+        <a href="#founder" onclick="closeMenu()">About</a>
+        <a href="#contact" class="nav-cta" onclick="closeMenu()">Request Demo</a>
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+</nav>
+
+<!-- ═══════════════════ HERO ═══════════════════ -->
+<section class="hero">
+    <!-- HIGGSFIELD VIDEO PLACEHOLDER -->
+    <div class="hero-bg">
+        <!-- Replace this div's contents with: <video autoplay muted loop playsinline src="hero-bg.mp4"></video> -->
+    </div>
+
+    <div class="hero-badge">
+        <span class="pulse-dot"></span>
+        Now in Clinic Pilot
+    </div>
+    <h1>The Future of Veterinary<br>Medicine is <span class="gradient-text">AI-Native</span></h1>
+    <p class="hero-sub">Three purpose-built iPadOS apps that cover every stage of a patient's clinical journey — from the OR to the ward to discharge — with AI reasoning at every step.</p>
+    <div class="hero-cta-group">
+        <a href="#contact" class="btn-primary">Request a Demo</a>
+        <a href="#apps" class="btn-secondary">See the Apps</a>
+    </div>
+    <p class="hero-acronym">Autonomous Reasoning for Clinical Animal Intelligence</p>
+</section>
+
+<!-- ═══════════════════ HERO SCREENSHOT ═══════════════════ -->
+<div class="showcase">
+    <div class="showcase-frame">
+        <img src="screenshots/anesthesia-monitor-ai.png" alt="ARCAI OR — Live vitals monitoring with real-time AI interpretation and predictive insights" loading="eager">
+    </div>
+</div>
+
+<!-- ═══════════════════ STATS BAR ═══════════════════ -->
+<div class="stats reveal">
+    <div class="stat">
+        <div class="stat-number">3</div>
+        <div class="stat-label">Clinical Apps</div>
+    </div>
+    <div class="stat">
+        <div class="stat-number">13</div>
+        <div class="stat-label">AI Reasoning Layers</div>
+    </div>
+    <div class="stat">
+        <div class="stat-number">0</div>
+        <div class="stat-label">Paper Clipboards</div>
+    </div>
+    <div class="stat">
+        <div class="stat-number">&infin;</div>
+        <div class="stat-label">Safer Patients</div>
+    </div>
+</div>
+
+<!-- ═══════════════════ APPS SECTION ═══════════════════ -->
+<section class="apps-section" id="apps">
+    <!-- HIGGSFIELD VIDEO PLACEHOLDER -->
+    <div class="apps-video-bg">
+        <!-- Replace with: <video autoplay muted loop playsinline src="apps-bg.mp4"></video> -->
+    </div>
+
+    <div class="section-header reveal">
+        <div class="section-tag">The Ecosystem</div>
+        <h2 class="section-title">One patient. One record.<br>Three powerful apps.</h2>
+        <p class="section-sub">Each app is a standalone clinical tool. Together, they form the most integrated veterinary workflow ever built.</p>
+    </div>
+
+    <!-- ── Anesthesia App ── -->
+    <div class="app-card anesthesia reveal">
+        <div class="app-info">
+            <div class="app-tag">Anesthesia</div>
+            <h3>ARCAI OR</h3>
+            <p>From pre-operative risk assessment to recovery — real-time vitals monitoring with live AI interpretation that reasons like an experienced anesthesiologist. It doesn't just display numbers. It thinks ahead.</p>
+            <ul class="app-features">
+                <li><span class="check">&#10003;</span>Multi-layer AI clinical reasoning engine</li>
+                <li><span class="check">&#10003;</span>Predictive alerts before values become critical</li>
+                <li><span class="check">&#10003;</span>AI-generated anesthesia protocols by patient profile</li>
+                <li><span class="check">&#10003;</span>Voice documentation — speak, the AI structures</li>
+                <li><span class="check">&#10003;</span>Real-time crisis response guidance</li>
+            </ul>
+        </div>
+        <div class="app-screenshot">
+            <img src="screenshots/anesthesia-patient-overview.png" alt="ARCAI OR — Patient overview with AI-generated risk analysis and strategy" loading="lazy">
+        </div>
+    </div>
+
+    <!-- ── Dental App ── -->
+    <div class="app-card dental reverse reveal">
+        <div class="app-info">
+            <div class="app-tag">Dental</div>
+            <h3>ARCAI Dental</h3>
+            <p>Professional-grade dental charting that maps every tooth, every surface, every finding. AVDC-standard documentation with interactive charts, periodontal probing grids, and AI-powered treatment planning — all from a single tap.</p>
+            <ul class="app-features">
+                <li><span class="check">&#10003;</span>Interactive chart — canine and feline dentitions</li>
+                <li><span class="check">&#10003;</span>Per-surface color-coded findings and staging</li>
+                <li><span class="check">&#10003;</span>Six-point periodontal probing depth grid</li>
+                <li><span class="check">&#10003;</span>AI treatment plan generation with priorities</li>
+                <li><span class="check">&#10003;</span>Photo documentation with clinical markup</li>
+            </ul>
+        </div>
+        <div class="app-screenshot">
+            <img src="screenshots/dental-chart.png" alt="ARCAI Dental — Interactive dental chart with per-tooth findings and probing depths" loading="lazy">
+        </div>
+    </div>
+
+    <!-- ── Inpatient App ── -->
+    <div class="app-card inpatient reveal">
+        <div class="app-info">
+            <div class="app-tag">Inpatient</div>
+            <h3>ARCAI Station</h3>
+            <p>The digital command center for every hospitalized patient. Real-time ward board, 24-hour treatment sheets, AI-powered shift handoffs, and continuous monitoring — replacing paper clipboards for good.</p>
+            <ul class="app-features">
+                <li><span class="check">&#10003;</span>Live ward board with real-time patient status</li>
+                <li><span class="check">&#10003;</span>24-hour treatment grid with completion tracking</li>
+                <li><span class="check">&#10003;</span>AI-generated shift handoff reports</li>
+                <li><span class="check">&#10003;</span>Voice-to-SOAP clinical note creation</li>
+                <li><span class="check">&#10003;</span>Seamless post-surgical import from ARCAI OR</li>
+            </ul>
+        </div>
+        <div class="coming-soon-placeholder">
+            <div>
+                <div class="coming-soon-icon">
+                    <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div class="coming-soon-label">In Development</div>
+                <div class="coming-soon-date">Q3 2026</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════ AI ENGINE ═══════════════════ -->
+<section class="ai-section" id="ai">
+    <div class="section-header reveal">
+        <div class="section-tag">AI Foundation</div>
+        <h2 class="section-title">AI-first. Not AI-added.</h2>
+        <p class="section-sub">Every competitor retrofitted AI onto legacy software. ARCAI was built from the ground up with AI as the foundation — not a feature.</p>
+    </div>
+    <div class="ai-grid">
+        <div class="ai-card reveal reveal-delay-1">
+            <div class="ai-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 2a8 8 0 0 1 8 8c0 3.3-2 6.2-5 7.5V19a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-1.5C6 16.2 4 13.3 4 10a8 8 0 0 1 8-8z" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 22h4M12 2v1M4.93 4.93l.7.7M2 12h1M19.07 4.93l-.7.7M22 12h-1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h4>Clinical Reasoning</h4>
+            <p>A multi-layer decision framework that evaluates patients the way an experienced anesthesiologist thinks — assessing risk, predicting complications, and generating strategies in real time.</p>
+        </div>
+        <div class="ai-card reveal reveal-delay-2">
+            <div class="ai-icon">
+                <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h4>Voice Documentation</h4>
+            <p>Speak freely in German or English during surgery. The AI transcribes, structures into clinical fields, and routes vitals, notes, and medications to the right place — hands-free.</p>
+        </div>
+        <div class="ai-card reveal reveal-delay-3">
+            <div class="ai-icon">
+                <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h4>Predictive Alerts</h4>
+            <p>Continuous vitals analysis that identifies trends and anticipates problems — alerting your team minutes before values become critical, not after.</p>
+        </div>
+        <div class="ai-card reveal reveal-delay-1">
+            <div class="ai-icon">
+                <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h4>Connected Ecosystem</h4>
+            <p>One patient, one record across all three apps. Post-surgical transfer from OR to ward happens with a single tap. Zero re-entry, zero data loss.</p>
+        </div>
+        <div class="ai-card reveal reveal-delay-2">
+            <div class="ai-icon">
+                <svg viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 5 9.04 9h5.92L12 13" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h4>Drug Intelligence</h4>
+            <p>Auto-calculated doses by weight and species. CRI rates, fluid plans, interaction checking, and formulary-aware suggestions — integrated directly into your workflow.</p>
+        </div>
+        <div class="ai-card reveal reveal-delay-3">
+            <div class="ai-icon">
+                <svg viewBox="0 0 24 24"><path d="M3 3v18h18" stroke-linecap="round" stroke-linejoin="round"/><path d="m19 9-5 5-4-4-3 3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <h4>Clinical Analytics</h4>
+            <p>Procedure durations, staff performance, treatment compliance, ward efficiency — operational data that clinic management has never had access to before.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ═══════════════════ FOUNDER ═══════════════════ -->
+<section class="founder reveal" id="founder">
+    <div class="founder-inner">
+        <div class="section-tag">Built by a Clinician</div>
+        <div class="founder-divider"></div>
+        <div class="founder-quote">
+            "Every feature in ARCAI was designed by someone who has <em>personally experienced the problems they solve</em> — not by a product manager who interviewed veterinarians, but by a vet who decided to build the tools he wished he had."
+        </div>
+        <div class="founder-name">Hamza Harb</div>
+        <div class="founder-title">Veterinary Anesthesiologist &middot; Founder of ARCAI</div>
+    </div>
+</section>
+
+<!-- ═══════════════════ CTA ═══════════════════ -->
+<section class="cta-section" id="contact">
+    <div class="cta-box reveal">
+        <h2>See ARCAI in Action</h2>
+        <p class="cta-subtitle">Currently in pilot at a leading Munich referral clinic.<br>Request a demo to see how ARCAI transforms your clinical workflow.</p>
+        <form class="cta-form" onsubmit="handleDemo(event)">
+            <input type="email" placeholder="your@clinic-email.com" required aria-label="Email address">
+            <button type="submit" class="btn-primary">Request Demo</button>
+        </form>
+    </div>
+</section>
+
+<!-- ═══════════════════ FOOTER ═══════════════════ -->
+<footer>
+    <div class="footer-inner">
+        <div class="footer-left">&copy; 2026 ARCAI &middot; Autonomous Reasoning for Clinical Animal Intelligence</div>
+        <div class="footer-right">
+            <a href="mailto:hello@arcai.vet">hello@arcai.vet</a>
+            <a href="#">Privacy</a>
+            <a href="#">Impressum</a>
+        </div>
+    </div>
+</footer>
+
+<!-- ═══════════════════ SCRIPTS ═══════════════════ -->
+<script>
+    // Scroll reveal
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // Nav shrink on scroll
+    const nav = document.querySelector('nav');
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            requestAnimationFrame(() => {
+                nav.classList.toggle('scrolled', window.scrollY > 80);
+                ticking = false;
+            });
+            ticking = true;
+        }
+    });
+
+    // Mobile menu
+    function toggleMenu() {
+        document.getElementById('navLinks').classList.toggle('open');
+        document.getElementById('menuToggle').classList.toggle('open');
+    }
+
+    function closeMenu() {
+        document.getElementById('navLinks').classList.remove('open');
+        document.getElementById('menuToggle').classList.remove('open');
+    }
+
+    // Demo form
+    function handleDemo(e) {
+        e.preventDefault();
+        const email = e.target.querySelector('input').value;
+        const btn = e.target.querySelector('button');
+        btn.textContent = 'Sent!';
+        btn.style.background = 'var(--accent-green)';
+        btn.style.color = 'white';
+        setTimeout(() => {
+            btn.textContent = 'Request Demo';
+            btn.style.background = '';
+            btn.style.color = '';
+            e.target.querySelector('input').value = '';
+        }, 3000);
+    }
+</script>
+
+</body>
+</html>
