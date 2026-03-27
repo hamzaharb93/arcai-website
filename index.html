@@ -1470,9 +1470,8 @@
     <div class="cta-box reveal-scale">
         <h2>See ARCAI in Action</h2>
         <p class="cta-subtitle">Currently in pilot at a leading Munich referral clinic.<br>Request a demo to see how ARCAI transforms your clinical workflow.</p>
-        <form class="cta-form" action="https://formspree.io/f/xpwzgwkl" method="POST" onsubmit="handleDemo(event)">
-            <input type="email" name="email" placeholder="your@clinic-email.com" required aria-label="Email address">
-            <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+        <form class="cta-form" onsubmit="handleDemo(event)">
+            <input type="email" placeholder="your@clinic-email.com" required aria-label="Email address">
             <button type="submit" class="btn-primary">Request Demo</button>
         </form>
     </div>
@@ -1544,41 +1543,16 @@
         document.getElementById('menuToggle').classList.remove('open');
     }
 
-    // Demo form — submit via fetch, show feedback
+    // Demo form — open mailto with visitor's email in body
     function handleDemo(e) {
         e.preventDefault();
-        const form = e.target;
-        const btn = form.querySelector('button');
-        btn.textContent = 'Sending...';
-        btn.disabled = true;
-
-        fetch(form.action, {
-            method: 'POST',
-            body: new FormData(form),
-            headers: { 'Accept': 'application/json' }
-        }).then(r => {
-            if (r.ok) {
-                btn.textContent = 'Sent!';
-                btn.style.background = 'var(--accent-green)';
-                btn.style.color = 'white';
-                form.querySelector('input[type="email"]').value = '';
-            } else {
-                btn.textContent = 'Error — try again';
-                btn.style.background = '#c0392b';
-                btn.style.color = 'white';
-            }
-        }).catch(() => {
-            btn.textContent = 'Error — try again';
-            btn.style.background = '#c0392b';
-            btn.style.color = 'white';
-        }).finally(() => {
-            setTimeout(() => {
-                btn.textContent = 'Request Demo';
-                btn.style.background = '';
-                btn.style.color = '';
-                btn.disabled = false;
-            }, 3000);
-        });
+        const email = e.target.querySelector('input').value;
+        const subject = encodeURIComponent('ARCAI Demo Request');
+        const body = encodeURIComponent('Hi,\n\nI would like to request a demo of ARCAI.\n\nMy email: ' + email + '\n\nBest regards');
+        window.location.href = 'mai' + 'lto:hel' + 'lo@arc' + 'ai.vet?subject=' + subject + '&body=' + body;
+        const btn = e.target.querySelector('button');
+        btn.textContent = 'Opening email...';
+        setTimeout(() => { btn.textContent = 'Request Demo'; }, 3000);
     }
 
     // Email obfuscation — assemble mailto on click
