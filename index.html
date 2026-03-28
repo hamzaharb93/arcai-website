@@ -15,6 +15,9 @@
     <meta name="twitter:description" content="Three purpose-built iPadOS apps for anesthesia, dental, and inpatient care.">
     <meta name="theme-color" content="#06090C">
     <link rel="canonical" href="https://arcai.vet">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <style>
         /* Self-hosted fonts — no external requests to Google */
         @font-face {
@@ -123,8 +126,13 @@
             color: var(--text-primary);
             text-decoration: none;
             display: flex;
-            align-items: baseline;
-            gap: 2px;
+            align-items: center;
+            gap: 10px;
+        }
+        .nav-logo img {
+            width: 32px;
+            height: 32px;
+            border-radius: 7px;
         }
         .nav-logo .dot-vet {
             font-size: 13px;
@@ -1109,7 +1117,7 @@
 
 <!-- ═══ NAVIGATION ═══ -->
 <nav>
-    <a href="#" class="nav-logo">ARCAI<span class="dot-vet">.vet</span></a>
+    <a href="#" class="nav-logo"><img src="logo-nav.png" alt="ARCAI" width="32" height="32">ARCAI<span class="dot-vet">.vet</span></a>
     <div class="nav-links" id="navLinks">
         <a href="#apps" onclick="closeMenu()">Apps</a>
         <a href="#ai" onclick="closeMenu()">AI Engine</a>
