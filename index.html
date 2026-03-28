@@ -18,6 +18,12 @@
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <script>
+        (function() {
+            var t = localStorage.getItem('theme');
+            if (t === 'light') document.documentElement.setAttribute('data-theme', 'light');
+        })();
+    </script>
     <style>
         /* Self-hosted fonts — no external requests to Google */
         @font-face {
@@ -1007,6 +1013,233 @@
         }
         .reveal-scale.visible { opacity: 1; transform: scale(1) translateY(0); }
 
+        /* ═══ THEME TOGGLE ═══ */
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .theme-toggle {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 8px;
+            padding: 7px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            transition: color 0.3s, border-color 0.3s, background 0.3s;
+            width: 36px;
+            height: 36px;
+        }
+        .theme-toggle:hover {
+            color: var(--text-primary);
+            border-color: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.04);
+        }
+        .theme-toggle svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .theme-toggle .icon-moon { display: none; }
+        [data-theme="light"] .theme-toggle .icon-sun { display: none; }
+        [data-theme="light"] .theme-toggle .icon-moon { display: block; }
+        [data-theme="light"] .theme-toggle:hover {
+            border-color: rgba(0, 0, 0, 0.15);
+            background: rgba(0, 0, 0, 0.04);
+        }
+
+        /* ═══ LIGHT MODE ═══ */
+        [data-theme="light"] {
+            --bg-primary: #F5F3F0;
+            --bg-secondary: #EDEAE6;
+            --bg-card: #FFFFFF;
+            --text-primary: #1A1D21;
+            --text-secondary: rgba(26, 29, 33, 0.6);
+            --text-muted: rgba(26, 29, 33, 0.35);
+            --anesthesia-light: #0A6163;
+            --dental-light: #1458C0;
+            --inpatient-light: #A86615;
+            --border: rgba(0, 0, 0, 0.08);
+        }
+
+        [data-theme="light"] body {
+            background:
+                radial-gradient(ellipse 80% 50% at 15% 80%, rgba(13, 115, 119, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 60% at 85% 20%, rgba(26, 111, 232, 0.05) 0%, transparent 50%),
+                radial-gradient(ellipse 70% 40% at 50% 100%, rgba(196, 122, 30, 0.04) 0%, transparent 50%),
+                var(--bg-primary);
+        }
+
+        /* Nav */
+        [data-theme="light"] nav {
+            background: rgba(245, 243, 240, 0.8);
+        }
+        [data-theme="light"] .nav-cta {
+            background: rgba(0, 0, 0, 0.06) !important;
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+        [data-theme="light"] .nav-cta:hover {
+            background: rgba(0, 0, 0, 0.1) !important;
+            border-color: rgba(0, 0, 0, 0.15);
+        }
+
+        /* Buttons */
+        [data-theme="light"] .btn-primary {
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+        [data-theme="light"] .btn-primary:hover {
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+        }
+        [data-theme="light"] .btn-secondary {
+            border-color: rgba(0, 0, 0, 0.12);
+        }
+        [data-theme="light"] .btn-secondary:hover {
+            border-color: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.03);
+        }
+
+        /* Hero */
+        [data-theme="light"] .hero-grid {
+            background-image: radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+        }
+        [data-theme="light"] .hero-glow--1 {
+            background: radial-gradient(circle, rgba(13, 115, 119, 0.25) 0%, transparent 70%);
+        }
+        [data-theme="light"] .hero-glow--2 {
+            background: radial-gradient(circle, rgba(26, 111, 232, 0.18) 0%, transparent 70%);
+        }
+        [data-theme="light"] .hero-glow--3 {
+            background: radial-gradient(circle, rgba(196, 122, 30, 0.14) 0%, transparent 70%);
+        }
+        [data-theme="light"] .hero-badge {
+            color: rgba(26, 29, 33, 0.5);
+        }
+
+        /* Gradient text — use base brand colors for contrast on light bg */
+        [data-theme="light"] .gradient-text {
+            background: linear-gradient(135deg, var(--anesthesia) 0%, var(--dental) 50%, var(--inpatient) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* Stat numbers */
+        [data-theme="light"] .stat-number {
+            background: linear-gradient(180deg, var(--text-primary) 0%, rgba(26, 29, 33, 0.5) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        [data-theme="light"] .stat:hover {
+            background: rgba(0, 0, 0, 0.02);
+        }
+
+        /* iPad Pro */
+        [data-theme="light"] .ipad-pro {
+            background: #E5E5EA;
+            box-shadow:
+                0 2px 4px rgba(0, 0, 0, 0.06),
+                0 8px 24px rgba(0, 0, 0, 0.08),
+                0 40px 100px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        }
+        [data-theme="light"] .ipad-pro::before {
+            background: #D1D1D6;
+            box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.2);
+        }
+        [data-theme="light"] .ipad-screen::after {
+            background: linear-gradient(130deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.05) 30%, transparent 50%);
+        }
+        [data-theme="light"] .showcase .ipad-pro {
+            box-shadow:
+                0 4px 8px rgba(0, 0, 0, 0.05),
+                0 20px 60px rgba(0, 0, 0, 0.08),
+                0 60px 140px rgba(0, 0, 0, 0.1),
+                0 0 120px rgba(13, 115, 119, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        }
+
+        /* App section glows — more visible on light bg */
+        [data-theme="light"] .app-section-glow {
+            opacity: 0.8;
+        }
+        [data-theme="light"] .app-section--anesthesia .ipad-pro {
+            box-shadow:
+                0 8px 24px rgba(0, 0, 0, 0.06),
+                0 40px 100px rgba(0, 0, 0, 0.08),
+                0 0 80px rgba(13, 115, 119, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        }
+        [data-theme="light"] .app-section--dental .ipad-pro {
+            box-shadow:
+                0 8px 24px rgba(0, 0, 0, 0.06),
+                0 40px 100px rgba(0, 0, 0, 0.08),
+                0 0 80px rgba(26, 111, 232, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+        }
+
+        /* App tags & checks */
+        [data-theme="light"] .app-section--anesthesia .app-tag { background: rgba(10, 97, 99, 0.1); }
+        [data-theme="light"] .app-section--dental .app-tag { background: rgba(20, 88, 192, 0.1); }
+        [data-theme="light"] .app-section--inpatient .app-tag { background: rgba(168, 102, 21, 0.1); }
+        [data-theme="light"] .app-section--anesthesia .check { background: rgba(10, 97, 99, 0.1); }
+        [data-theme="light"] .app-section--dental .check { background: rgba(20, 88, 192, 0.1); }
+        [data-theme="light"] .app-section--inpatient .check { background: rgba(168, 102, 21, 0.1); }
+
+        /* Coming soon */
+        [data-theme="light"] .coming-soon-placeholder {
+            background: linear-gradient(135deg, rgba(168, 102, 21, 0.06), rgba(168, 102, 21, 0.03));
+            border-color: rgba(168, 102, 21, 0.12);
+        }
+
+        /* AI section */
+        [data-theme="light"] .ai-section::before {
+            background: radial-gradient(circle, rgba(26, 111, 232, 0.06) 0%, transparent 60%);
+        }
+        [data-theme="light"] .ai-card {
+            background: #FFFFFF;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+        [data-theme="light"] .ai-card:hover {
+            border-color: rgba(0, 0, 0, 0.1);
+            box-shadow: 0 24px 64px rgba(0, 0, 0, 0.06);
+        }
+        [data-theme="light"] .ai-icon {
+            background: rgba(0, 0, 0, 0.03);
+            border-color: rgba(0, 0, 0, 0.05);
+        }
+        [data-theme="light"] .ai-card:hover .ai-icon {
+            background: rgba(10, 97, 99, 0.08);
+            border-color: rgba(10, 97, 99, 0.15);
+        }
+
+        /* CTA form */
+        [data-theme="light"] .cta-form input {
+            border-color: rgba(0, 0, 0, 0.1);
+            background: rgba(0, 0, 0, 0.04);
+            color: var(--text-primary);
+        }
+        [data-theme="light"] .cta-form input:focus {
+            border-color: var(--anesthesia);
+            background: rgba(0, 0, 0, 0.02);
+        }
+        [data-theme="light"] .cta-section::before {
+            background: radial-gradient(ellipse, rgba(13, 115, 119, 0.1) 0%, transparent 60%);
+        }
+
+        /* Founder */
+        [data-theme="light"] .founder-divider {
+            background: linear-gradient(90deg, transparent, var(--anesthesia-light), transparent);
+        }
+
         /* ═══ RESPONSIVE ═══ */
         @media (max-width: 1024px) {
             .ai-grid { grid-template-columns: repeat(2, 1fr); }
@@ -1101,6 +1334,10 @@
             .hero-glow--2 { width: 280px; height: 280px; }
             .hero-glow--3 { width: 220px; height: 220px; }
             .app-section-glow { width: 300px; height: 300px; }
+
+            /* Light mode mobile */
+            [data-theme="light"] .nav-links { background: #F5F3F0; }
+            .nav-right { position: relative; z-index: 10000; }
         }
 
         @media (max-width: 420px) {
@@ -1122,11 +1359,17 @@
         <a href="#founder" onclick="closeMenu()">About</a>
         <a href="#contact" class="nav-cta" onclick="closeMenu()">Request Demo</a>
     </div>
-    <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" onclick="toggleMenu()">
-        <span></span>
-        <span></span>
-        <span></span>
-    </button>
+    <div class="nav-right">
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle light mode" onclick="toggleTheme()">
+            <svg class="icon-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            <svg class="icon-moon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+        <button class="menu-toggle" id="menuToggle" aria-label="Toggle menu" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </div>
 </nav>
 
 <!-- ═══ HERO ═══ -->
@@ -1145,7 +1388,7 @@
         Now in Clinic Pilot
     </div>
     <h1>Safer anesthesia. Smarter charting.<br><span class="gradient-text">Zero paper.</span></h1>
-    <p class="hero-sub">Three purpose-built iPadOS apps for veterinary medicine — covering every stage of a patient's clinical journey, from the OR to the ward to discharge.</p>
+    <p class="hero-sub">The first clinical ecosystem built for veterinary medicine. Three integrated platforms working in harmony across anesthesia, dental care, and inpatient management.</p>
     <div class="hero-cta-group">
         <a href="#contact" class="btn-primary">Request a Demo</a>
         <a href="#apps" class="btn-secondary">See the Apps</a>
@@ -1535,6 +1778,25 @@
         const btn = e.target.querySelector('button');
         btn.textContent = 'Opening email...';
         setTimeout(() => { btn.textContent = 'Request Demo'; }, 3000);
+    }
+
+    // Theme toggle
+    function toggleTheme() {
+        const html = document.documentElement;
+        const isLight = html.getAttribute('data-theme') === 'light';
+        if (isLight) {
+            html.removeAttribute('data-theme');
+            localStorage.setItem('theme', 'dark');
+            document.querySelector('meta[name="theme-color"]').content = '#06090C';
+        } else {
+            html.setAttribute('data-theme', 'light');
+            localStorage.setItem('theme', 'light');
+            document.querySelector('meta[name="theme-color"]').content = '#F5F3F0';
+        }
+    }
+    // Sync theme-color meta on load
+    if (document.documentElement.getAttribute('data-theme') === 'light') {
+        document.querySelector('meta[name="theme-color"]').content = '#F5F3F0';
     }
 
     // Email obfuscation
