@@ -1486,8 +1486,17 @@
             -webkit-user-select: text;
             user-select: text;
         }
+        .hero-headline {
+            font-size: clamp(18px, 2.5vw, 28px);
+            color: var(--text-primary);
+            font-weight: 500;
+            letter-spacing: -0.3px;
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards 0.45s;
+            margin-bottom: 8px;
+        }
         .hero-tagline {
-            font-size: clamp(16px, 2vw, 22px);
+            font-size: clamp(14px, 1.8vw, 18px);
             color: var(--text-secondary);
             font-weight: 400;
             letter-spacing: 0.5px;
@@ -1849,6 +1858,7 @@
         Now in Clinic Pilot
     </div>
     <div class="hero-mega">ARCAI</div>
+    <p class="hero-headline">One digital patient record. Anesthesia to discharge.</p>
     <p class="hero-tagline">Clinical software for veterinary teams.</p>
     <div class="hero-cta-group">
         <a href="#contact" class="btn-primary">Book a 20-min Demo</a>
