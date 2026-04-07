@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ARCAI — Clinical Software for Veterinary Teams</title>
-    <meta name="description" content="Digital patient records for veterinary anesthesia, dental, and inpatient care — on iPad. Built by a practicing veterinary anesthesiologist. Currently in pilot.">
-    <meta property="og:title" content="ARCAI — Digital Patient Records for Veterinary Teams">
+    <title>ARCAI | Clinical Software for Veterinary Teams</title>
+    <meta name="description" content="Digital patient records for veterinary anesthesia, dental, and inpatient care on iPad. Built by a practicing veterinary anesthesiologist. Currently in pilot.">
+    <meta property="og:title" content="ARCAI | Digital Patient Records for Veterinary Teams">
     <meta property="og:description" content="Three iPad apps for anesthesia, dental, and inpatient care that share one patient record. Built by a clinician, currently in pilot.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://arcai.vet">
     <meta property="og:image" content="https://arcai.vet/screenshots/anesthesia-monitor-ai.jpeg">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="ARCAI — Clinical Software for Veterinary Teams">
+    <meta name="twitter:title" content="ARCAI | Clinical Software for Veterinary Teams">
     <meta name="twitter:description" content="iPad apps for veterinary anesthesia, dental, and inpatient care. Shared patient records, built by a clinician.">
     <meta name="theme-color" content="#06090C">
     <link rel="canonical" href="https://arcai.vet">
@@ -25,7 +25,7 @@
         })();
     </script>
     <style>
-        /* Self-hosted fonts — no external requests to Google */
+        /* Self-hosted fonts with no external requests to Google */
         @font-face {
             font-family: 'Plus Jakarta Sans';
             font-style: normal;
@@ -81,6 +81,21 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html { scroll-behavior: smooth; overflow-x: hidden; }
 
+        * {
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        p, h1, h2, h3, h4, h5, h6, span, a, li, td, th, label, blockquote, figcaption, dt, dd {
+            -webkit-user-select: text;
+            user-select: text;
+        }
+
+        ::selection {
+            background: rgba(60, 35, 20, 0.75);
+            color: #D4764E;
+            -webkit-text-fill-color: #D4764E;
+        }
+
         body {
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
             background:
@@ -93,6 +108,7 @@
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
         }
+        body.menu-open { overflow: hidden; }
 
         /* ═══ GRAIN TEXTURE ═══ */
         body::before {
@@ -238,16 +254,6 @@
         @keyframes drift3 {
             0%, 100% { transform: translate(0, 0) scale(1); }
             50% { transform: translate(40px, -25px) scale(1.12); }
-        }
-
-        .hero-grid {
-            position: absolute;
-            inset: 0;
-            background-image: radial-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-            background-size: 48px 48px;
-            mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 20%, transparent 70%);
-            -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black 20%, transparent 70%);
-            pointer-events: none;
         }
 
         .hero > * { position: relative; z-index: 1; }
@@ -550,7 +556,7 @@
             border: 1px solid rgba(196, 122, 30, 0.18);
         }
 
-        /* ═══ APP SECTIONS — Full Width Immersive ═══ */
+        /* ═══ APP SECTIONS: Full Width Immersive ═══ */
         .app-section {
             min-height: 100vh;
             display: flex;
@@ -744,7 +750,7 @@
         /* ═══ SCREENSHOT GALLERY ═══ */
         .gallery-section {
             padding: 140px 0 160px;
-            overflow: hidden;
+            overflow: visible;
         }
         .gallery-header {
             text-align: center;
@@ -756,10 +762,13 @@
             gap: 32px;
             padding: 0 max(32px, calc((100vw - 800px) / 2));
             overflow-x: auto;
+            overflow-y: visible;
             scroll-snap-type: x mandatory;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
             cursor: grab;
+            padding-top: 8px;
+            padding-bottom: 12px;
         }
         .gallery-track:active { cursor: grabbing; }
         .gallery-track::-webkit-scrollbar { display: none; }
@@ -772,6 +781,10 @@
         .gallery-item .ipad-pro {
             border-radius: 20px;
             padding: 10px;
+            box-shadow:
+                0 8px 24px rgba(0, 0, 0, 0.24),
+                0 2px 8px rgba(0, 0, 0, 0.18),
+                inset 0 1px 0 rgba(255, 255, 255, 0.04);
         }
         .gallery-item .ipad-screen {
             border-radius: 12px;
@@ -1037,6 +1050,116 @@
             flex-shrink: 0;
         }
 
+        /* ═══ INTEGRATIONS ═══ */
+        .integration-section {
+            padding: 40px 48px 20px;
+        }
+        .integration-card {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 36px 40px;
+            border-radius: 18px;
+            border: 1px solid var(--border);
+            background: var(--bg-secondary);
+            text-align: center;
+        }
+        .integration-title {
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            letter-spacing: -0.3px;
+        }
+        .integration-sub {
+            font-size: 15px;
+            line-height: 1.8;
+            color: var(--text-secondary);
+            max-width: 720px;
+            margin: 0 auto;
+        }
+        .integration-note {
+            margin-top: 14px;
+            font-size: 12px;
+            color: var(--text-muted);
+            letter-spacing: 0.2px;
+        }
+
+        .integration-faq {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border);
+            text-align: left;
+            max-width: 720px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .integration-faq-q {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+        .integration-faq-a {
+            font-size: 14px;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ═══ FAQ ═══ */
+        .faq-section {
+            padding: 70px 48px 30px;
+        }
+        .faq-wrap {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+        .faq-intro {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+        .faq-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 10px;
+        }
+        .faq-item {
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            background: var(--bg-secondary);
+            overflow: hidden;
+        }
+        .faq-item summary {
+            list-style: none;
+            cursor: pointer;
+            padding: 18px 20px;
+            font-size: 15px;
+            font-weight: 650;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+        }
+        .faq-item summary::-webkit-details-marker { display: none; }
+        .faq-item summary::after {
+            content: '+';
+            font-size: 18px;
+            color: var(--text-muted);
+            flex-shrink: 0;
+            line-height: 1;
+        }
+        .faq-item[open] summary::after { content: '−'; }
+        .faq-answer {
+            padding: 0 20px 18px;
+            color: var(--text-secondary);
+            font-size: 14px;
+            line-height: 1.75;
+            max-width: 90ch;
+        }
+        .faq-answer strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
         /* ═══ FOOTER DISCLAIMER ═══ */
         .footer-disclaimer {
             text-align: center;
@@ -1158,7 +1281,6 @@
                 radial-gradient(ellipse 70% 40% at 50% 100%, rgba(196, 122, 30, 0.04) 0%, transparent 50%),
                 var(--bg-primary);
         }
-
         /* Nav */
         [data-theme="light"] nav {
             background: rgba(245, 243, 240, 0.8);
@@ -1188,9 +1310,6 @@
         }
 
         /* Hero */
-        [data-theme="light"] .hero-grid {
-            background-image: radial-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px);
-        }
         [data-theme="light"] .hero-glow--1 {
             background: radial-gradient(circle, rgba(13, 115, 119, 0.25) 0%, transparent 70%);
         }
@@ -1204,7 +1323,7 @@
             color: rgba(26, 29, 33, 0.5);
         }
 
-        /* Gradient text — use base brand colors for contrast on light bg */
+        /* Gradient text: use base brand colors for contrast on light bg */
         [data-theme="light"] .gradient-text {
             background: linear-gradient(135deg, var(--anesthesia) 0%, var(--dental) 50%, var(--inpatient) 100%);
             background-size: 200% auto;
@@ -1248,8 +1367,7 @@
                 0 0 120px rgba(13, 115, 119, 0.08),
                 inset 0 1px 0 rgba(255, 255, 255, 0.6);
         }
-
-        /* App section glows — more visible on light bg */
+        /* App section glows: more visible on light bg */
         [data-theme="light"] .app-section-glow {
             opacity: 0.8;
         }
@@ -1336,9 +1454,200 @@
             color: var(--anesthesia-light);
         }
 
+        [data-theme="light"] .integration-card {
+            background: #FFFFFF;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        }
+
+        [data-theme="light"] .faq-item {
+            background: #FFFFFF;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+        }
+
         /* Founder */
         [data-theme="light"] .founder-divider {
             background: linear-gradient(90deg, transparent, var(--anesthesia-light), transparent);
+        }
+
+        /* ═══ HERO MEGA TEXT ═══ */
+        .hero-mega {
+            font-size: clamp(80px, 18vw, 220px);
+            font-weight: 800;
+            letter-spacing: -6px;
+            line-height: 0.9;
+            background: linear-gradient(135deg, var(--anesthesia-light) 0%, var(--dental-light) 40%, var(--inpatient-light) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 8s ease infinite, fadeUp 0.8s ease forwards 0.3s;
+            opacity: 0;
+            margin-bottom: 20px;
+            -webkit-user-select: text;
+            user-select: text;
+        }
+        .hero-tagline {
+            font-size: clamp(16px, 2vw, 22px);
+            color: var(--text-secondary);
+            font-weight: 400;
+            letter-spacing: 0.5px;
+            opacity: 0;
+            animation: fadeUp 0.8s ease forwards 0.55s;
+        }
+
+        /* ═══ FLOATING PILLS ═══ */
+        .hero-pills-container {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+        .hero-pill {
+            position: absolute;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            border-radius: 100px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            border: 1px solid;
+            pointer-events: auto;
+            cursor: grab;
+            opacity: 0;
+            will-change: transform;
+            transition: box-shadow 0.4s;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .hero-pill:hover {
+            box-shadow: 0 4px 20px rgba(255, 255, 255, 0.06);
+        }
+        .hero-pill:active { cursor: grabbing; }
+        .hero-pill--teal {
+            background: rgba(13, 115, 119, 0.08);
+            border-color: rgba(13, 115, 119, 0.25);
+            color: var(--anesthesia-light);
+        }
+        .hero-pill--blue {
+            background: rgba(26, 111, 232, 0.08);
+            border-color: rgba(26, 111, 232, 0.25);
+            color: var(--dental-light);
+        }
+        .hero-pill--amber {
+            background: rgba(196, 122, 30, 0.08);
+            border-color: rgba(196, 122, 30, 0.25);
+            color: var(--inpatient-light);
+        }
+        .hero-pill--neutral {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: var(--text-secondary);
+        }
+
+        /* ═══ FLOATING ICONS ═══ */
+        .hero-icon-float {
+            position: absolute;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            pointer-events: auto;
+            cursor: grab;
+            opacity: 0;
+            will-change: transform;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .hero-icon-float:active { cursor: grabbing; }
+        .hero-icon-float svg {
+            width: 28px;
+            height: 28px;
+            stroke: var(--text-secondary);
+            fill: none;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* ═══ ECOSYSTEM TITLE LINES ═══ */
+        .eco-title { line-height: 1.15; }
+        .eco-line {
+            display: inline;
+            opacity: 0;
+        }
+        .eco-line-wrap {
+            display: block;
+            transform: translateY(40px);
+            opacity: 0;
+        }
+
+        /* ═══ SCROLL COMPANIONS ═══ */
+        .scroll-companion {
+            position: fixed;
+            bottom: 28px;
+            z-index: 100;
+            width: 72px;
+            height: 72px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease, color 0.6s ease;
+            will-change: transform;
+            color: var(--anesthesia-light);
+        }
+        .scroll-companion--dog { left: 32px; }
+        .scroll-companion--cat { right: 32px; }
+        .scroll-companion svg {
+            width: 100%;
+            height: 100%;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+        .scroll-companion.visible { opacity: 1; }
+
+        /* ═══ LIGHT MODE: NEW ELEMENTS ═══ */
+        [data-theme="light"] .hero-mega {
+            background: linear-gradient(135deg, var(--anesthesia) 0%, var(--dental) 40%, var(--inpatient) 100%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        [data-theme="light"] .hero-pill--teal {
+            background: rgba(10, 97, 99, 0.08);
+            border-color: rgba(10, 97, 99, 0.2);
+        }
+        [data-theme="light"] .hero-pill--blue {
+            background: rgba(20, 88, 192, 0.08);
+            border-color: rgba(20, 88, 192, 0.2);
+        }
+        [data-theme="light"] .hero-pill--amber {
+            background: rgba(168, 102, 21, 0.08);
+            border-color: rgba(168, 102, 21, 0.2);
+        }
+        [data-theme="light"] .hero-pill--neutral {
+            background: rgba(0, 0, 0, 0.04);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: var(--text-secondary);
+        }
+        [data-theme="light"] .hero-icon-float {
+            background: rgba(0, 0, 0, 0.03);
+            border-color: rgba(0, 0, 0, 0.08);
+        }
+        [data-theme="light"] .hero-icon-float svg {
+            stroke: var(--text-muted);
+        }
+        [data-theme="light"] .scroll-companion {
+            color: var(--anesthesia);
         }
 
         /* ═══ RESPONSIVE ═══ */
@@ -1356,13 +1665,19 @@
                 display: none;
                 position: fixed;
                 top: 0; left: 0; right: 0; bottom: 0;
-                background: #06090C;
+                width: 100vw;
+                height: 100dvh;
+                background: rgba(6, 9, 12, 0.98);
+                backdrop-filter: blur(18px);
+                -webkit-backdrop-filter: blur(18px);
                 flex-direction: column;
                 justify-content: center;
                 align-items: center;
                 gap: 36px;
                 z-index: 9999;
                 padding: 80px 24px;
+                isolation: isolate;
+                overflow-y: auto;
             }
             .nav-links.open { display: flex; }
             .nav-links a { font-size: 20px; font-weight: 600; color: var(--text-primary); padding: 8px 0; }
@@ -1372,6 +1687,10 @@
             .menu-toggle.open span:nth-child(1) { transform: rotate(45deg) translate(4px, 5px); }
             .menu-toggle.open span:nth-child(2) { opacity: 0; }
             .menu-toggle.open span:nth-child(3) { transform: rotate(-45deg) translate(4px, -5px); }
+
+            .hero-pills-container { display: none; }
+            .scroll-companion { display: none; }
+            .hero-mega { font-size: clamp(60px, 16vw, 80px); letter-spacing: -3px; }
 
             .hero { padding: 130px 24px 60px; min-height: auto; }
             .hero h1 { font-size: 36px; letter-spacing: -1.5px; word-spacing: 3px; }
@@ -1420,6 +1739,15 @@
             .step-arrow { transform: rotate(90deg); padding: 0; }
             .step { max-width: 300px; }
 
+            .integration-section { padding: 24px 24px 12px; }
+            .integration-card { padding: 28px 24px; }
+            .integration-title { font-size: 24px; }
+            .integration-sub { font-size: 14px; }
+
+            .faq-section { padding: 56px 24px 18px; }
+            .faq-item summary { font-size: 14px; padding: 16px 16px; }
+            .faq-answer { padding: 0 16px 16px; font-size: 13.5px; }
+
             .cta-section { padding: 80px 24px 120px; }
             .cta-section h2 { font-size: 30px; letter-spacing: -1px; }
             .cta-form { flex-direction: column; }
@@ -1442,7 +1770,11 @@
             .app-section-glow { width: 300px; height: 300px; }
 
             /* Light mode mobile */
-            [data-theme="light"] .nav-links { background: #F5F3F0; }
+            [data-theme="light"] .nav-links {
+                background: rgba(245, 243, 240, 0.98);
+                backdrop-filter: blur(18px);
+                -webkit-backdrop-filter: blur(18px);
+            }
             .nav-right { position: relative; z-index: 10000; }
         }
 
@@ -1463,6 +1795,7 @@
         <a href="#apps" onclick="closeMenu()">Apps</a>
         <a href="#ai" onclick="closeMenu()">Intelligence</a>
         <a href="#founder" onclick="closeMenu()">About</a>
+        <a href="#faq" onclick="closeMenu()">FAQ</a>
         <a href="#contact" class="nav-cta" onclick="closeMenu()">Book a Demo</a>
     </div>
     <div class="nav-right">
@@ -1486,27 +1819,49 @@
         <div class="hero-glow hero-glow--1"></div>
         <div class="hero-glow hero-glow--2"></div>
         <div class="hero-glow hero-glow--3"></div>
-        <div class="hero-grid"></div>
+    </div>
+
+    <!-- Floating pills + icons (hidden on mobile) -->
+    <div class="hero-pills-container">
+        <div class="hero-pill hero-pill--teal" style="top: 18%; left: 7%; transform: rotate(-6deg);">ANESTHESIA</div>
+        <div class="hero-pill hero-pill--blue" style="top: 15%; right: 8%; transform: rotate(4deg);">DENTAL</div>
+        <div class="hero-pill hero-pill--amber" style="top: 52%; right: 5%; transform: rotate(-3deg);">INPATIENT</div>
+        <div class="hero-pill hero-pill--neutral" style="top: 34%; left: 4%; transform: rotate(5deg);">AI-POWERED</div>
+        <div class="hero-pill hero-pill--neutral" style="bottom: 20%; left: 10%; transform: rotate(-4deg);">iPadOS</div>
+        <div class="hero-pill hero-pill--neutral" style="bottom: 26%; right: 12%; transform: rotate(3deg);">ONE RECORD</div>
+
+        <div class="hero-icon-float" style="top: 26%; left: 20%;">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="17" r="3"/><circle cx="7.5" cy="10" r="2"/><circle cx="16.5" cy="10" r="2"/><circle cx="9.5" cy="5.5" r="1.8"/><circle cx="14.5" cy="5.5" r="1.8"/></svg>
+        </div>
+        <div class="hero-icon-float" style="top: 22%; right: 22%;">
+            <svg viewBox="0 0 24 24"><polyline points="2 12 6 12 8 4 12 20 14 12 16 12 18 8 20 12 22 12"/></svg>
+        </div>
+        <div class="hero-icon-float" style="bottom: 32%; left: 24%;">
+            <svg viewBox="0 0 24 24"><path d="M12 2c-2.5 0-4.5 1.5-5 4-.3 1.5-.5 3-.5 5 0 3 .5 7 2.5 9 .8.8 1.5-.5 2-2 .3-.8.5-1 1-1s.7.2 1 1c.5 1.5 1.2 2.8 2 2 2-2 2.5-6 2.5-9 0-2-.2-3.5-.5-5-.5-2.5-2.5-4-5-4z"/></svg>
+        </div>
+        <div class="hero-icon-float" style="bottom: 36%; right: 20%;">
+            <svg viewBox="0 0 24 24"><path d="M6 3v7a6 6 0 0 0 12 0V3"/><circle cx="19" cy="16" r="2"/><path d="M19 18v1a4 4 0 0 1-4 4h-2a4 4 0 0 1-4-4v-3"/></svg>
+        </div>
     </div>
 
     <div class="hero-badge">
         <span class="pulse-dot"></span>
         Now in Clinic Pilot
     </div>
-    <h1>One digital patient record.<br><span class="gradient-text">Anesthesia to discharge.</span></h1>
-    <p class="hero-sub">For veterinary teams who want safer monitoring, faster documentation, and zero duplicate entry. Three iPad apps that share one patient record across the OR, dental suite, and ward.</p>
+    <div class="hero-mega">ARCAI</div>
+    <p class="hero-tagline">Clinical software for veterinary teams.</p>
     <div class="hero-cta-group">
         <a href="#contact" class="btn-primary">Book a 20-min Demo</a>
         <a href="#apps" class="btn-secondary">See the Apps</a>
     </div>
-    <p class="hero-trust">Built by a veterinary anesthesiologist &middot; Piloting in a Munich referral clinic</p>
+    <p class="hero-trust">Developed by a practicing veterinary anesthesiologist &middot; Currently in pilot in Munich &middot; API integration with existing clinic software</p>
 </section>
 
 <!-- ═══ SHOWCASE ═══ -->
 <section class="showcase">
     <div class="ipad-pro" data-parallax>
         <div class="ipad-screen">
-            <img src="screenshots/anesthesia-monitor-ai.jpeg" alt="ARCAI OR — Live vitals monitoring with real-time AI interpretation and predictive insights" loading="eager">
+            <img src="screenshots/anesthesia-monitor-ai.jpeg" alt="ARCAI OR: Live vitals monitoring with real-time AI interpretation and predictive insights" loading="eager">
         </div>
     </div>
 </section>
@@ -1534,10 +1889,14 @@
 </div>
 
 <!-- ═══ ECOSYSTEM INTRO ═══ -->
-<section class="ecosystem-intro reveal" id="apps">
-    <div class="section-tag">The Ecosystem</div>
-    <h2 class="section-title">One patient. One record.<br><span class="gradient-text">From the OR to discharge.</span></h2>
-    <p class="section-sub">Each app handles one clinical domain. Together, they share a single patient record — so nothing gets re-entered and nothing gets lost between departments.</p>
+<section class="ecosystem-intro" id="apps">
+    <div class="section-tag reveal">The Ecosystem</div>
+    <h2 class="section-title eco-title">
+        <span class="eco-line-wrap"><span class="eco-line">One patient.</span></span>
+        <span class="eco-line-wrap"><span class="eco-line">One record.</span></span>
+        <span class="eco-line-wrap"><span class="eco-line gradient-text">Across every team.</span></span>
+    </h2>
+    <p class="section-sub reveal" data-delay="100">Each app covers one part of care. Together, they keep one shared patient record from the OR to the ward, so information stays complete and handovers stay clear.</p>
 </section>
 
 <!-- ═══ ANESTHESIA ═══ -->
@@ -1548,20 +1907,21 @@
             <div class="app-tag">Anesthesia</div>
             <div class="app-status app-status--pilot">In Clinic Pilot</div>
             <h3>ARCAI OR</h3>
-            <p>Anesthesia monitoring still runs on paper in most clinics — handwritten vitals, scattered notes, no trend visibility. ARCAI OR replaces that with a complete digital anesthesia record on iPad.</p>
+            <p>In many clinics, anesthesia documentation is still handwritten and fragmented. ARCAI OR gives your team a complete digital anesthesia record on iPad, with trends, medication support, and structured notes in one place.</p>
             <ul class="app-features">
-                <li><span class="check">&#10003;</span>See vitals trends at a glance, not just single-point readings</li>
-                <li><span class="check">&#10003;</span>Get early warnings when parameters trend toward risk</li>
-                <li><span class="check">&#10003;</span>Auto-calculate drug doses by weight, species, and profile</li>
-                <li><span class="check">&#10003;</span>Document by voice during procedures — AI structures the notes</li>
+                <li><span class="check">&#10003;</span>Trend view for vitals, not just single readings</li>
+                <li><span class="check">&#10003;</span>Early warning alerts when values start drifting toward risk</li>
+                <li><span class="check">&#10003;</span>Weight- and species-based dose support</li>
+                <li><span class="check">&#10003;</span>Voice documentation with structured output</li>
                 <li><span class="check">&#10003;</span>Generate anesthesia protocols based on patient assessment</li>
-                <li><span class="check">&#10003;</span>One-tap CPR emergency mode — RECOVER 2024 protocol with live timers, weight-based drug doses, metronome, and full event logging</li>
+                <li><span class="check">&#10003;</span>One-tap CPR emergency mode using the RECOVER 2024 protocol with live timers, weight-based drug doses, metronome, and full event logging</li>
+                <li><span class="check">&#10003;</span>Automatic appointment sync via API, so upcoming surgical cases appear in your dashboard without manual entry</li>
             </ul>
         </div>
         <div class="app-visual reveal-right" data-delay="150">
             <div class="ipad-pro">
                 <div class="ipad-screen">
-                    <img src="screenshots/anesthesia-patient-overview.jpeg" alt="ARCAI OR — Patient overview with AI-generated risk analysis and strategy" loading="lazy">
+                    <img src="screenshots/anesthesia-patient-overview.jpeg" alt="ARCAI OR: Patient overview with AI-generated risk analysis and strategy" loading="lazy">
                 </div>
             </div>
         </div>
@@ -1585,19 +1945,19 @@
             <div class="app-tag">Dental</div>
             <div class="app-status app-status--development">In Development</div>
             <h3>ARCAI Dental</h3>
-            <p>Dental documentation in veterinary practice is often incomplete or trapped in paper charts. ARCAI Dental brings AVDC-standard charting to iPad — every tooth, every surface, every finding in one place.</p>
+            <p>Dental documentation is often incomplete or stuck in paper charts. ARCAI Dental brings AVDC-standard charting to iPad and keeps every tooth, every surface, and every finding in one place.</p>
             <ul class="app-features">
                 <li><span class="check">&#10003;</span>Interactive dental charts for canine and feline dentitions</li>
                 <li><span class="check">&#10003;</span>Color-coded per-surface findings with staging</li>
                 <li><span class="check">&#10003;</span>Six-point periodontal probing depth grid</li>
-                <li><span class="check">&#10003;</span>AI-assisted treatment plan suggestions</li>
+                <li><span class="check">&#10003;</span>Treatment plan support based on recorded findings</li>
                 <li><span class="check">&#10003;</span>Photo documentation with annotation tools</li>
             </ul>
         </div>
         <div class="app-visual reveal-left">
             <div class="ipad-pro">
                 <div class="ipad-screen">
-                    <img src="screenshots/dental-chart.jpeg" alt="ARCAI Dental — Interactive dental chart with per-tooth findings and probing depths" loading="lazy">
+                    <img src="screenshots/dental-chart.jpeg" alt="ARCAI Dental: Interactive dental chart with per-tooth findings and probing depths" loading="lazy">
                 </div>
             </div>
         </div>
@@ -1618,7 +1978,7 @@
             <div class="app-tag">Inpatient</div>
             <div class="app-status app-status--development">In Development</div>
             <h3>ARCAI Station</h3>
-            <p>Ward management still runs on paper clipboards and verbal handoffs in most clinics. ARCAI Station digitizes the inpatient workflow — from treatment sheets to shift handovers.</p>
+            <p>Ward management often still depends on paper clipboards and verbal updates. ARCAI Station digitizes the inpatient workflow, from treatment sheets to shift handovers.</p>
             <ul class="app-features">
                 <li><span class="check">&#10003;</span>Live ward board showing every patient's current status</li>
                 <li><span class="check">&#10003;</span>24-hour treatment grid with completion tracking</li>
@@ -1630,7 +1990,7 @@
         <div class="app-visual reveal-right" data-delay="150">
             <div class="ipad-pro">
                 <div class="ipad-screen">
-                    <img src="screenshots/inpatient.jpeg" alt="ARCAI Station — Inpatient ward management with treatment grid and patient status board" loading="lazy">
+                    <img src="screenshots/inpatient.jpeg" alt="ARCAI Station: Inpatient ward management with treatment grid and patient status board" loading="lazy">
                 </div>
             </div>
         </div>
@@ -1698,51 +2058,51 @@
 
 <!-- ═══ AI ENGINE ═══ -->
 <section class="ai-section" id="ai">
-    <div class="section-tag reveal">Built-In Intelligence</div>
-    <h2 class="section-title reveal" data-delay="100">Practical AI for <span class="gradient-text">every clinical step.</span></h2>
-    <p class="section-sub reveal" data-delay="200">AI in ARCAI isn&rsquo;t a chatbot bolted on. It&rsquo;s woven into each workflow — calculating doses, reading vitals trends, structuring voice notes, and surfacing risks before they escalate.</p>
+    <div class="section-tag reveal">Clinical Support</div>
+    <h2 class="section-title reveal" data-delay="100">AI support where your team <span class="gradient-text">actually needs it.</span></h2>
+    <p class="section-sub reveal" data-delay="200">ARCAI uses AI inside the workflow: dose support, trend detection, voice-note structuring, and early risk alerts. The goal is simple: less manual effort and clearer decisions during busy shifts.</p>
     <div class="ai-grid">
         <div class="ai-card reveal" data-delay="0">
             <div class="ai-icon">
                 <svg viewBox="0 0 24 24"><path d="M12 2a8 8 0 0 1 8 8c0 3.3-2 6.2-5 7.5V19a1 1 0 0 1-1 1h-4a1 1 0 0 1-1-1v-1.5C6 16.2 4 13.3 4 10a8 8 0 0 1 8-8z" stroke-linecap="round" stroke-linejoin="round"/><path d="M10 22h4M12 2v1M4.93 4.93l.7.7M2 12h1M19.07 4.93l-.7.7M22 12h-1" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
             <h4>Risk Assessment</h4>
-            <p>Before a patient goes under, ARCAI evaluates breed, age, weight, bloodwork, and pre-existing conditions to flag anesthesia risk — so your team starts every case better prepared.</p>
+            <p>Before a patient goes under, ARCAI checks breed, age, weight, bloodwork, and pre-existing conditions to flag anesthesia risk, so your team starts each case better prepared.</p>
         </div>
         <div class="ai-card reveal" data-delay="100">
             <div class="ai-icon">
                 <svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" stroke-linecap="round" stroke-linejoin="round"/><path d="M19 10v2a7 7 0 0 1-14 0v-2M12 19v4M8 23h8" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
             <h4>Voice Documentation</h4>
-            <p>Speak in German or English during surgery. ARCAI transcribes and structures your notes into clinical fields, routing vitals, medications, and observations automatically — hands stay sterile.</p>
+            <p>Speak in German or English during surgery. ARCAI transcribes and structures notes into clinical fields, then routes vitals, medications, and observations automatically so your hands stay sterile.</p>
         </div>
         <div class="ai-card reveal" data-delay="200">
             <div class="ai-icon">
                 <svg viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
             <h4>Early Warning System</h4>
-            <p>Instead of waiting for a value to cross a threshold, ARCAI tracks vital trends and alerts your team when parameters start moving in the wrong direction — giving you time to act.</p>
+            <p>Instead of waiting for a value to cross a threshold, ARCAI tracks vital trends and alerts your team when parameters start moving in the wrong direction, giving you time to act.</p>
         </div>
         <div class="ai-card reveal" data-delay="0">
             <div class="ai-icon">
                 <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
             <h4>Shared Patient Record</h4>
-            <p>One patient, one record across all three apps. When a patient moves from the OR to the ward, all data transfers with a single tap — no re-entry, no transcription errors.</p>
+            <p>One patient, one record across all three apps. When a patient moves from the OR to the ward, all data transfers with a single tap, with no re-entry and no transcription errors.</p>
         </div>
         <div class="ai-card reveal" data-delay="100">
             <div class="ai-icon">
                 <svg viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" stroke-linecap="round" stroke-linejoin="round"/><path d="M12 5 9.04 9h5.92L12 13" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
             <h4>Drug Calculations</h4>
-            <p>Auto-calculated doses by weight and species. CRI rates, fluid plans, and interaction flags built into the drug selection workflow — reducing mental math under pressure.</p>
+            <p>Auto-calculated doses by weight and species. CRI rates, fluid plans, and interaction flags are built into the drug selection workflow, reducing mental math under pressure.</p>
         </div>
         <div class="ai-card reveal" data-delay="200">
             <div class="ai-icon">
                 <svg viewBox="0 0 24 24"><path d="M3 3v18h18" stroke-linecap="round" stroke-linejoin="round"/><path d="m19 9-5 5-4-4-3 3" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
             <h4>Clinical Insights</h4>
-            <p>Procedure duration, complication rates, treatment compliance — operational patterns that help clinic managers make informed decisions about staffing, scheduling, and outcomes.</p>
+            <p>Procedure duration, complication rates, and treatment compliance highlight patterns that help clinic managers make informed decisions about staffing, scheduling, and outcomes.</p>
         </div>
     </div>
 </section>
@@ -1753,7 +2113,7 @@
         <div class="section-tag">Built by a Clinician</div>
         <div class="founder-divider"></div>
         <div class="founder-quote">
-            "I built ARCAI because I got tired of working around the same problems every shift — <em>illegible records, mental drug calculations, and handoffs that depend on who happened to be awake.</em> These tools exist because I needed them at work."
+            "I built ARCAI to solve problems we face in real shifts: <em>unclear records, repeated data entry, and handovers that depend too much on memory.</em> These tools are designed for day-to-day clinical reality."
         </div>
         <div class="founder-name">Hamza Harb</div>
         <div class="founder-title">Veterinary Anesthesiologist &middot; Munich Referral Clinic &middot; Founder</div>
@@ -1768,7 +2128,7 @@
         <div class="step">
             <div class="step-number">1</div>
             <div class="step-title">Book a demo</div>
-            <div class="step-desc">20-minute walkthrough tailored to your clinic&rsquo;s workflow.</div>
+            <div class="step-desc">A 20-minute walkthrough based on your clinic&rsquo;s workflow.</div>
         </div>
         <div class="step-arrow">
             <svg viewBox="0 0 24 24" width="24" height="24"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -1789,15 +2149,135 @@
     </div>
 </section>
 
+<!-- ═══ INTEGRATIONS ═══ -->
+<section class="integration-section">
+    <div class="integration-card reveal">
+        <div class="section-tag">Integrations</div>
+        <h2 class="integration-title">Works with your existing clinic software</h2>
+        <p class="integration-sub">ARCAI can connect to your current management system via API. New surgery appointments can appear automatically in the dashboard, so your anesthesia team sees upcoming cases earlier and prepares faster.</p>
+        <p class="integration-note">Integration depth depends on your clinic setup and available API access.</p>
+        <div class="integration-faq">
+            <p class="integration-faq-q">Can ARCAI connect to our current clinic software?</p>
+            <p class="integration-faq-a">Yes. ARCAI is built to integrate via API. Depending on your setup, patient and appointment data can sync automatically to reduce manual entry and improve team coordination.</p>
+        </div>
+    </div>
+</section>
+
+<!-- ═══ FAQ ═══ -->
+<section class="faq-section" id="faq">
+    <div class="faq-wrap">
+        <div class="faq-intro reveal">
+            <div class="section-tag">FAQ</div>
+            <h2 class="section-title">Questions clinics usually ask before rollout</h2>
+            <p class="section-sub">These are the practical questions we hear most often from clinic leadership, head nurses, and anesthesia teams.</p>
+        </div>
+        <div class="faq-grid">
+            <details class="faq-item reveal" data-delay="0">
+                <summary>1) How much extra work does this create for the team in daily routine?</summary>
+                <div class="faq-answer">The goal is less admin work, not more. Rollout focuses on replacing duplicate documentation steps. In onboarding, we map your current process and keep the team flow as close as possible to what already works.</div>
+            </details>
+            <details class="faq-item reveal" data-delay="30">
+                <summary>2) How long does onboarding take before we can use it safely in real cases?</summary>
+                <div class="faq-answer">Most clinics start with a structured pilot phase and guided onboarding. Teams usually begin with selected workflows first, then expand once everyone is comfortable and the process is stable.</div>
+            </details>
+            <details class="faq-item reveal" data-delay="60">
+                <summary>3) Do we need to change our whole clinic process to fit the software?</summary>
+                <div class="faq-answer">No. The setup is adapted to your existing workflow. The objective is to reduce friction and paper dependence while preserving clear responsibilities for vets, nurses, and reception staff.</div>
+            </details>
+            <details class="faq-item reveal" data-delay="90">
+                <summary>4) Can ARCAI work with our existing clinic management system?</summary>
+                <div class="faq-answer">Yes, via API integration where available. This can include syncing key data such as upcoming surgery appointments so teams get earlier visibility without manual re-entry.</div>
+            </details>
+            <details class="faq-item reveal" data-delay="120">
+                <summary>5) Who owns the clinical data?</summary>
+                <div class="faq-answer"><strong>Your clinic remains the data owner.</strong> ARCAI acts as a software platform that processes data for clinical operations according to agreed terms and legal requirements.</div>
+            </details>
+            <details class="faq-item reveal" data-delay="150">
+                <summary>6) Is this compliant with German and EU data-protection expectations?</summary>
+                <div class="faq-answer">Data protection is addressed as a core rollout topic, including GDPR-related documentation, responsibilities, and technical safeguards. Compliance details are clarified with each clinic during implementation.</div>
+            </details>
+            <details class="faq-item reveal" data-delay="180">
+                <summary>7) What happens if Wi-Fi is unstable or the internet goes down?</summary>
+                <div class="faq-answer">Operational reliability is planned during onboarding, including device setup and connectivity checks. Fallback procedures are defined with the clinic so teams can continue working safely during interruptions.</div>
+            </details>
+            <details class="faq-item reveal" data-delay="210">
+                <summary>8) Can we control who can see or edit specific information?</summary>
+                <div class="faq-answer">Yes. Access can be organized by role and responsibility so teams see the data relevant to their task while maintaining accountability and traceability.</div>
+            </details>
+            <details class="faq-item reveal" data-delay="240">
+                <summary>9) Can we track who changed what and when?</summary>
+                <div class="faq-answer">Yes. Clinical teams and leadership can review documentation history to support transparent handovers, quality assurance, and internal accountability.</div>
+            </details>
+            <details class="faq-item reveal" data-delay="270">
+                <summary>10) How much training is required for vets and nurses?</summary>
+                <div class="faq-answer">Training is practical and role-based. The aim is fast confidence in daily tasks rather than long theoretical sessions, with support during the first live phase.</div>
+            </details>
+            <details class="faq-item reveal" data-delay="300">
+                <summary>11) How does a pilot start for our clinic?</summary>
+                <div class="faq-answer">We begin with a workflow review, define a focused pilot scope, and align rollout steps with your team. Commercial terms are discussed after scope is clear so your clinic can decide with confidence.</div>
+            </details>
+            <details class="faq-item reveal" data-delay="330">
+                <summary>12) What support do we get if something is unclear during a shift?</summary>
+                <div class="faq-answer">Support is structured around real clinical operations, especially in the early rollout stage. Response expectations and contact channels are defined with each clinic.</div>
+            </details>
+            <details class="faq-item reveal" data-delay="360">
+                <summary>13) Does this replace veterinary judgment or protocol responsibility?</summary>
+                <div class="faq-answer">No. ARCAI is a clinical software tool that supports documentation and decision workflows. Medical responsibility remains with the attending veterinary professionals.</div>
+            </details>
+            <details class="faq-item reveal" data-delay="390">
+                <summary>14) Can we start small and expand department by department?</summary>
+                <div class="faq-answer">Yes. Most clinics begin with a focused scope, then scale in phases once teams are stable and internal confidence is high.</div>
+            </details>
+            <details class="faq-item reveal" data-delay="420">
+                <summary>15) How can our clinic evaluate fit before committing?</summary>
+                <div class="faq-answer">Book a workflow-focused demo. We review your current process, identify quick wins, and outline a realistic pilot plan so your team can decide with clarity.</div>
+            </details>
+        </div>
+    </div>
+</section>
+
 <!-- ═══ CTA ═══ -->
 <section class="cta-section" id="contact">
-    <h2 class="reveal">See It in Your Workflow</h2>
-    <p class="cta-subtitle reveal" data-delay="100">ARCAI OR is currently in pilot. Book a short call and we&rsquo;ll walk through the app with your team&rsquo;s workflow in mind.</p>
+    <h2 class="reveal">See how ARCAI fits your clinic workflow.</h2>
+    <p class="cta-subtitle reveal" data-delay="100">ARCAI OR is currently in pilot. Book a short call and we&rsquo;ll walk through the app step by step with your team&rsquo;s process in mind.</p>
     <form class="cta-form reveal" data-delay="200" onsubmit="handleDemo(event)">
         <input type="email" placeholder="your@clinic-email.com" required aria-label="Email address">
         <button type="submit" class="btn-primary">Book a Demo</button>
     </form>
 </section>
+
+<!-- ═══ SCROLL COMPANIONS (hidden on mobile) ═══ -->
+<div class="scroll-companion scroll-companion--dog" aria-hidden="true">
+    <svg viewBox="0 0 56 48">
+        <!-- Dog: geometric minimal side profile, facing right -->
+        <path d="M6 36 C6 22 14 18 22 18 C28 18 33 14 35 10 C37 6 41 5 44 7 C46 8 46 11 44 13 C42 15 40 17 40 20 C44 22 48 27 48 34 L48 36" fill="none"/>
+        <path d="M14 36 C14 30 22 27 30 27 C38 27 44 30 44 36" fill="none"/>
+        <path d="M37 8 L35 1 L42 6" fill="none"/>
+        <circle cx="42" cy="10" r="1.2" fill="currentColor" stroke="none"/>
+        <path d="M6 32 C2 26 4 18 8 14" fill="none"/>
+        <line x1="18" y1="36" x2="18" y2="44"/>
+        <line x1="24" y1="36" x2="24" y2="44"/>
+        <line x1="38" y1="36" x2="38" y2="44"/>
+        <line x1="44" y1="36" x2="44" y2="44"/>
+    </svg>
+</div>
+<div class="scroll-companion scroll-companion--cat" aria-hidden="true">
+    <svg viewBox="0 0 56 48">
+        <!-- Cat: geometric minimal side profile, facing left -->
+        <path d="M50 36 C50 22 42 18 34 18 C28 18 23 14 21 10 C19 6 15 5 12 7 C10 8 10 11 12 13 C14 15 16 17 16 20 C12 22 8 27 8 34 L8 36" fill="none"/>
+        <path d="M42 36 C42 30 34 27 26 27 C18 27 12 30 12 36" fill="none"/>
+        <path d="M17 8 L13 0 L20 6" fill="none"/>
+        <path d="M23 9 L23 1 L27 7" fill="none"/>
+        <circle cx="14" cy="10" r="1.2" fill="currentColor" stroke="none"/>
+        <line x1="10" y1="13" x2="3" y2="11"/>
+        <line x1="10" y1="15" x2="3" y2="16"/>
+        <path d="M50 32 C54 24 52 16 55 11" fill="none"/>
+        <line x1="16" y1="36" x2="16" y2="44"/>
+        <line x1="22" y1="36" x2="22" y2="44"/>
+        <line x1="36" y1="36" x2="36" y2="44"/>
+        <line x1="42" y1="36" x2="42" y2="44"/>
+    </svg>
+</div>
 
 <!-- ═══ FOOTER ═══ -->
 <footer>
@@ -1811,9 +2291,14 @@
     </div>
     <div class="footer-disclaimer">
         Product currently in pilot phase. Features and availability may change.<br>
-        Clinical software tool &mdash; not a replacement for professional veterinary judgment.
+        Clinical software tool, not a replacement for professional veterinary judgment.
     </div>
 </footer>
+
+<!-- ═══ GSAP ═══ -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/Draggable.min.js"></script>
 
 <!-- ═══ SCRIPTS ═══ -->
 <script>
@@ -1906,12 +2391,14 @@
 
     // Mobile menu
     function toggleMenu() {
-        document.getElementById('navLinks').classList.toggle('open');
+        const isOpen = document.getElementById('navLinks').classList.toggle('open');
         document.getElementById('menuToggle').classList.toggle('open');
+        document.body.classList.toggle('menu-open', isOpen);
     }
     function closeMenu() {
         document.getElementById('navLinks').classList.remove('open');
         document.getElementById('menuToggle').classList.remove('open');
+        document.body.classList.remove('menu-open');
     }
 
     // Demo form
@@ -1952,7 +2439,7 @@
         window.location.href = 'mai' + 'lto:hel' + 'lo@arc' + 'ai.vet';
     });
 
-    // Analytics — lightweight event tracking (plug into any provider)
+    // Analytics: lightweight event tracking (plug into any provider)
     function trackEvent(name, data) {
         if (typeof window.va === 'function') window.va('event', { name: name, data: data });
         if (typeof window.gtag === 'function') window.gtag('event', name, data);
@@ -1978,6 +2465,308 @@
     document.querySelectorAll('[id]').forEach(function(el) {
         if (sectionNames[el.id]) sectionObserver.observe(el);
     });
+
+    // ═══ GSAP ANIMATIONS ═══
+    if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+        gsap.registerPlugin(ScrollTrigger);
+
+        // --- Hero pills + icons ---
+        var heroPills = document.querySelectorAll('.hero-pill');
+        var heroIcons = document.querySelectorAll('.hero-icon-float');
+
+        // Fade in pills
+        gsap.to(heroPills, {
+            opacity: 1,
+            duration: 0.6,
+            stagger: 0.1,
+            delay: 1.2,
+            ease: 'power2.out'
+        });
+
+        // Fade in icons
+        gsap.to(heroIcons, {
+            opacity: 0.7,
+            duration: 0.6,
+            stagger: 0.12,
+            delay: 1.5,
+            ease: 'power2.out'
+        });
+
+        // Idle bob for pills (store tweens for kill on drag)
+        var bobTweens = [];
+        heroPills.forEach(function(pill, i) {
+            var tw = gsap.to(pill, {
+                y: '+=12',
+                duration: 2.5 + i * 0.3,
+                repeat: -1,
+                yoyo: true,
+                ease: 'sine.inOut',
+                delay: 1.2 + i * 0.2
+            });
+            bobTweens.push({ el: pill, tween: tw });
+        });
+
+        // Idle bob for icons
+        heroIcons.forEach(function(icon, i) {
+            var tw = gsap.to(icon, {
+                y: '+=8',
+                x: '+=4',
+                duration: 3 + i * 0.4,
+                repeat: -1,
+                yoyo: true,
+                ease: 'sine.inOut',
+                delay: 1.5 + i * 0.3
+            });
+            bobTweens.push({ el: icon, tween: tw });
+        });
+
+        // --- Draggable pills + icons with collision ---
+        if (typeof Draggable !== 'undefined') {
+            var allFloaters = Array.from(heroPills).concat(Array.from(heroIcons));
+            var heroEl = document.querySelector('.hero');
+
+            function killBob(el) {
+                bobTweens.forEach(function(b) {
+                    if (b.el === el) b.tween.kill();
+                });
+            }
+
+            // Clamp an element so it stays fully within the viewport + hero
+            function clampToView(el) {
+                var r = el.getBoundingClientRect();
+                var pad = 8;
+                var fixX = 0, fixY = 0;
+                var heroRect = heroEl.getBoundingClientRect();
+                if (r.left < pad) fixX = pad - r.left;
+                if (r.right > window.innerWidth - pad) fixX = (window.innerWidth - pad) - r.right;
+                if (r.top < heroRect.top + pad) fixY = (heroRect.top + pad) - r.top;
+                if (r.bottom > heroRect.bottom - pad) fixY = (heroRect.bottom - pad) - r.bottom;
+                if (fixX !== 0 || fixY !== 0) {
+                    gsap.to(el, { x: '+=' + fixX, y: '+=' + fixY, duration: 0.3, ease: 'power2.out', overwrite: 'auto' });
+                }
+            }
+
+            function checkCollisions(dragTarget) {
+                var r1 = dragTarget.getBoundingClientRect();
+                allFloaters.forEach(function(other) {
+                    if (other === dragTarget) return;
+                    var r2 = other.getBoundingClientRect();
+                    if (r1.left < r2.right && r1.right > r2.left &&
+                        r1.top < r2.bottom && r1.bottom > r2.top) {
+                        var dx = (r2.left + r2.width / 2) - (r1.left + r1.width / 2);
+                        var dy = (r2.top + r2.height / 2) - (r1.top + r1.height / 2);
+                        var dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                        var pushX = (dx / dist) * 40;
+                        var pushY = (dy / dist) * 40;
+                        var pushRot = (dx > 0 ? 1 : -1) * (6 + Math.random() * 6);
+                        killBob(other);
+                        gsap.to(other, {
+                            x: '+=' + pushX,
+                            y: '+=' + pushY,
+                            rotation: '+=' + pushRot,
+                            duration: 0.4,
+                            ease: 'power2.out',
+                            overwrite: 'auto',
+                            onComplete: function() { clampToView(other); }
+                        });
+                    }
+                });
+            }
+
+            allFloaters.forEach(function(el) {
+                Draggable.create(el, {
+                    type: 'x,y',
+                    bounds: heroEl,
+                    edgeResistance: 0.85,
+                    onPress: function() { killBob(this.target); },
+                    onDrag: function() { checkCollisions(this.target); }
+                });
+            });
+        }
+
+        // Scroll parallax: hide pills/icons when leaving hero, restore on return
+        var pillsVisible = true;
+        ScrollTrigger.create({
+            trigger: '.hero',
+            start: 'center top',
+            onLeave: function() {
+                pillsVisible = false;
+                gsap.to(allFloaters || heroPills, { opacity: 0, duration: 0.4, ease: 'power2.in' });
+                gsap.to(heroIcons, { opacity: 0, duration: 0.4, ease: 'power2.in' });
+            },
+            onEnterBack: function() {
+                pillsVisible = true;
+                heroPills.forEach(function(p) { gsap.to(p, { opacity: 1, duration: 0.5 }); });
+                heroIcons.forEach(function(ic) { gsap.to(ic, { opacity: 0.7, duration: 0.5 }); });
+            }
+        });
+
+        // --- Ecosystem title stagger ---
+        var ecoWraps = document.querySelectorAll('.eco-line-wrap');
+        var ecoInlines = document.querySelectorAll('.eco-line');
+        if (ecoWraps.length) {
+            // Set inline spans visible immediately (opacity controlled by wrap)
+            ecoInlines.forEach(function(el) { el.style.opacity = 1; });
+            gsap.to(ecoWraps, {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                stagger: 0.2,
+                ease: 'power3.out',
+                scrollTrigger: {
+                    trigger: '.eco-title',
+                    start: 'top 80%',
+                    toggleActions: 'play none none none'
+                }
+            });
+        }
+
+        // --- Showcase iPad: GSAP instead of CSS animation ---
+        var showcaseIpad = document.querySelector('.showcase .ipad-pro');
+        if (showcaseIpad) {
+            showcaseIpad.style.animation = 'none';
+            showcaseIpad.style.opacity = '0';
+            gsap.to(showcaseIpad, {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                duration: 1.2,
+                delay: 1.2,
+                ease: 'power3.out'
+            });
+            gsap.set(showcaseIpad, { y: 40, scale: 0.96 });
+        }
+
+        // --- App sections: GSAP ScrollTrigger ---
+        document.querySelectorAll('.app-section').forEach(function(section) {
+            var text = section.querySelector('.app-text');
+            var visual = section.querySelector('.app-visual');
+            var features = section.querySelectorAll('.app-features li');
+            var glow = section.querySelector('.app-section-glow');
+            var isDental = section.classList.contains('app-section--dental');
+            var textX = isDental ? 80 : -80;
+            var visualX = isDental ? -80 : 80;
+
+            // Remove CSS reveal classes so GSAP takes over
+            if (text) {
+                text.classList.remove('reveal-left', 'reveal-right');
+                text.style.opacity = '1';
+                text.style.transform = 'none';
+            }
+            if (visual) {
+                visual.classList.remove('reveal-left', 'reveal-right');
+                visual.style.opacity = '1';
+                visual.style.transform = 'none';
+            }
+
+            var tl = gsap.timeline({
+                scrollTrigger: {
+                    trigger: section,
+                    start: 'top 75%',
+                    toggleActions: 'play none none none'
+                }
+            });
+
+            if (text) {
+                tl.from(text, {
+                    x: textX,
+                    opacity: 0,
+                    duration: 1,
+                    ease: 'power3.out'
+                }, 0);
+            }
+            if (visual) {
+                tl.from(visual, {
+                    x: visualX,
+                    opacity: 0,
+                    rotationY: isDental ? -6 : 6,
+                    duration: 1.2,
+                    ease: 'power3.out'
+                }, 0.15);
+            }
+            if (features.length) {
+                tl.from(features, {
+                    y: 20,
+                    opacity: 0,
+                    duration: 0.5,
+                    stagger: 0.07,
+                    ease: 'power2.out'
+                }, 0.4);
+            }
+
+            // Background glow parallax
+            if (glow) {
+                gsap.to(glow, {
+                    y: -80,
+                    ease: 'none',
+                    scrollTrigger: {
+                        trigger: section,
+                        start: 'top bottom',
+                        end: 'bottom top',
+                        scrub: 1
+                    }
+                });
+            }
+        });
+
+        // --- Scroll companions ---
+        var dogEl = document.querySelector('.scroll-companion--dog');
+        var catEl = document.querySelector('.scroll-companion--cat');
+
+        if (dogEl && catEl) {
+            var heroSection = document.querySelector('.hero');
+            var ctaSection = document.querySelector('.cta-section');
+            var scrollTimeout;
+            var lastScrollY = 0;
+
+            var companionSections = [
+                { el: document.querySelector('.app-section--anesthesia'), color: 'var(--anesthesia-light)' },
+                { el: document.querySelector('.app-section--dental'), color: 'var(--dental-light)' },
+                { el: document.querySelector('.app-section--inpatient'), color: 'var(--inpatient-light)' }
+            ];
+
+            function updateCompanionColor(color) {
+                dogEl.style.color = color;
+                catEl.style.color = color;
+            }
+
+            window.addEventListener('scroll', function() {
+                var sy = window.scrollY;
+                var heroBot = heroSection.offsetTop + heroSection.offsetHeight;
+                var ctaTop = ctaSection.offsetTop;
+                var show = sy > heroBot - 200 && sy < ctaTop - 200;
+
+                dogEl.classList.toggle('visible', show);
+                catEl.classList.toggle('visible', show);
+
+                if (show) {
+                    var delta = sy - lastScrollY;
+                    var tilt = Math.min(Math.max(delta * 0.5, -15), 15);
+                    var bounce = Math.min(Math.abs(delta) * 0.15, 8);
+
+                    gsap.to(dogEl, { rotation: tilt, y: -bounce, duration: 0.3, ease: 'power2.out' });
+                    gsap.to(catEl, { rotation: -tilt, y: -bounce, duration: 0.3, ease: 'power2.out' });
+
+                    clearTimeout(scrollTimeout);
+                    scrollTimeout = setTimeout(function() {
+                        gsap.to(dogEl, { rotation: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.5)' });
+                        gsap.to(catEl, { rotation: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.5)' });
+                    }, 150);
+
+                    // Color change per active section
+                    companionSections.forEach(function(s) {
+                        if (s.el) {
+                            var rect = s.el.getBoundingClientRect();
+                            if (rect.top < window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.5) {
+                                updateCompanionColor(s.color);
+                            }
+                        }
+                    });
+                }
+                lastScrollY = sy;
+            });
+        }
+    }
 </script>
 
 </body>
