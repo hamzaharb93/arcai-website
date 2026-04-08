@@ -2540,19 +2540,35 @@
 
             function getBounds() {
                 var hr = heroEl.getBoundingClientRect();
-                return { left: hr.left + 8, top: hr.top + 8, right: hr.right - 8, bottom: hr.bottom - 8 };
+                return { left: hr.left, top: hr.top, right: hr.right, bottom: hr.bottom };
+            }
+
+            // Clamp a target position so the element stays fully inside hero bounds
+            function clampXY(el, targetX, targetY) {
+                var r = el.getBoundingClientRect();
+                var curX = gsap.getProperty(el, 'x');
+                var curY = gsap.getProperty(el, 'y');
+                var b = getBounds();
+                // Predicted rect after move
+                var newLeft = r.left + (targetX - curX);
+                var newRight = r.right + (targetX - curX);
+                var newTop = r.top + (targetY - curY);
+                var newBottom = r.bottom + (targetY - curY);
+                var clampedX = targetX;
+                var clampedY = targetY;
+                if (newLeft < b.left) clampedX = targetX + (b.left - newLeft);
+                if (newRight > b.right) clampedX = targetX + (b.right - newRight);
+                if (newTop < b.top) clampedY = targetY + (b.top - newTop);
+                if (newBottom > b.bottom) clampedY = targetY + (b.bottom - newBottom);
+                return { x: clampedX, y: clampedY };
             }
 
             function clampToView(el) {
-                var r = el.getBoundingClientRect();
-                var b = getBounds();
-                var fixX = 0, fixY = 0;
-                if (r.left < b.left) fixX = b.left - r.left;
-                if (r.right > b.right) fixX = b.right - r.right;
-                if (r.top < b.top) fixY = b.top - r.top;
-                if (r.bottom > b.bottom) fixY = b.bottom - r.bottom;
-                if (fixX !== 0 || fixY !== 0) {
-                    gsap.to(el, { x: '+=' + fixX, y: '+=' + fixY, duration: 0.4, ease: 'elastic.out(0.5, 0.3)', overwrite: 'auto' });
+                var curX = gsap.getProperty(el, 'x');
+                var curY = gsap.getProperty(el, 'y');
+                var clamped = clampXY(el, curX, curY);
+                if (clamped.x !== curX || clamped.y !== curY) {
+                    gsap.to(el, { x: clamped.x, y: clamped.y, duration: 0.3, ease: 'power2.out', overwrite: 'auto' });
                 }
             }
 
@@ -2570,10 +2586,13 @@
                         var pushY = (dy / dist) * strength;
                         var pushRot = (dx > 0 ? 1 : -1) * (6 + Math.random() * 8);
                         killBob(other);
+                        // Clamp push destination to hero bounds
+                        var otherX = gsap.getProperty(other, 'x');
+                        var otherY = gsap.getProperty(other, 'y');
+                        var clamped = clampXY(other, otherX + pushX, otherY + pushY);
                         gsap.to(other, {
-                            x: '+=' + pushX, y: '+=' + pushY, rotation: '+=' + pushRot,
-                            duration: 0.6, ease: 'power3.out', overwrite: 'auto',
-                            onComplete: function() { clampToView(other); }
+                            x: clamped.x, y: clamped.y, rotation: '+=' + pushRot,
+                            duration: 0.6, ease: 'power3.out', overwrite: 'auto'
                         });
                     }
                 });
@@ -2586,7 +2605,7 @@
                 Draggable.create(el, {
                     type: 'x,y',
                     bounds: heroEl,
-                    edgeResistance: 0.7,
+                    edgeResistance: 1,
                     onPress: function() {
                         killBob(this.target);
                         gsap.killTweensOf(this.target);
@@ -2622,12 +2641,17 @@
                         if (speed < 50) return; // too slow, no momentum
 
                         var friction = 0.92;
-                        var throwX = vd.vx * friction * 0.35;
-                        var throwY = vd.vy * friction * 0.35;
+                        var rawThrowX = vd.vx * friction * 0.35;
+                        var rawThrowY = vd.vy * friction * 0.35;
                         var throwRot = (vd.vx > 0 ? 1 : -1) * Math.min(speed * 0.02, 15);
                         var duration = Math.min(speed * 0.0015, 1.2);
 
-                        // Momentum glide
+                        // Clamp throw destination to hero bounds
+                        var curX = gsap.getProperty(target, 'x');
+                        var curY = gsap.getProperty(target, 'y');
+                        var clamped = clampXY(target, curX + rawThrowX, curY + rawThrowY);
+
+                        // Momentum glide with collision checks
                         var step = { progress: 0 };
                         gsap.to(step, {
                             progress: 1,
@@ -2639,14 +2663,13 @@
                         });
 
                         gsap.to(target, {
-                            x: '+=' + throwX,
-                            y: '+=' + throwY,
+                            x: clamped.x,
+                            y: clamped.y,
                             rotation: '+=' + throwRot,
                             duration: duration,
                             ease: 'power3.out',
                             overwrite: 'auto',
                             onComplete: function() {
-                                clampToView(target);
                                 // Settle rotation back towards 0
                                 gsap.to(target, { rotation: gsap.getProperty(target, 'rotation') * 0.3, duration: 0.6, ease: 'elastic.out(0.4, 0.25)' });
                             }
