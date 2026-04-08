@@ -1713,13 +1713,10 @@
                 left: auto !important;
                 right: auto !important;
                 bottom: auto !important;
-                transform: none !important;
                 padding: 8px 16px;
                 font-size: 10px;
                 letter-spacing: 2px;
                 opacity: 1;
-                pointer-events: none;
-                cursor: default;
             }
             .hero-icon-float {
                 display: none;
@@ -2506,134 +2503,94 @@
     if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
         gsap.registerPlugin(ScrollTrigger);
 
-        // --- Hero pills + icons (desktop only for float/drag/parallax) ---
+        // --- Hero pills + icons ---
         var heroPills = document.querySelectorAll('.hero-pill');
         var heroIcons = document.querySelectorAll('.hero-icon-float');
         var isMobile = window.innerWidth <= 768;
+        var bobTweens = [];
 
         if (!isMobile) {
-            // Fade in pills
-            gsap.to(heroPills, {
-                opacity: 1,
-                duration: 0.6,
-                stagger: 0.1,
-                delay: 1.2,
-                ease: 'power2.out'
-            });
+            // Fade in pills (desktop — mobile pills are already opacity:1 via CSS)
+            gsap.to(heroPills, { opacity: 1, duration: 0.6, stagger: 0.1, delay: 1.2, ease: 'power2.out' });
+            gsap.to(heroIcons, { opacity: 0.7, duration: 0.6, stagger: 0.12, delay: 1.5, ease: 'power2.out' });
 
-            // Fade in icons
-            gsap.to(heroIcons, {
-                opacity: 0.7,
-                duration: 0.6,
-                stagger: 0.12,
-                delay: 1.5,
-                ease: 'power2.out'
-            });
-
-            // Idle bob for pills (store tweens for kill on drag)
-            var bobTweens = [];
+            // Idle bob for pills
             heroPills.forEach(function(pill, i) {
-                var tw = gsap.to(pill, {
-                    y: '+=12',
-                    duration: 2.5 + i * 0.3,
-                    repeat: -1,
-                    yoyo: true,
-                    ease: 'sine.inOut',
-                    delay: 1.2 + i * 0.2
-                });
+                var tw = gsap.to(pill, { y: '+=12', duration: 2.5 + i * 0.3, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 1.2 + i * 0.2 });
                 bobTweens.push({ el: pill, tween: tw });
             });
-
             // Idle bob for icons
             heroIcons.forEach(function(icon, i) {
-                var tw = gsap.to(icon, {
-                    y: '+=8',
-                    x: '+=4',
-                    duration: 3 + i * 0.4,
-                    repeat: -1,
-                    yoyo: true,
-                    ease: 'sine.inOut',
-                    delay: 1.5 + i * 0.3
-                });
+                var tw = gsap.to(icon, { y: '+=8', x: '+=4', duration: 3 + i * 0.4, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 1.5 + i * 0.3 });
                 bobTweens.push({ el: icon, tween: tw });
             });
+        }
 
-            // --- Draggable pills + icons with collision ---
-            if (typeof Draggable !== 'undefined') {
-                var allFloaters = Array.from(heroPills).concat(Array.from(heroIcons));
-                var heroEl = document.querySelector('.hero');
+        // --- Draggable pills + icons with collision (works on both mobile + desktop) ---
+        if (typeof Draggable !== 'undefined') {
+            var allFloaters = isMobile ? Array.from(heroPills) : Array.from(heroPills).concat(Array.from(heroIcons));
+            var heroEl = document.querySelector('.hero');
 
-                function killBob(el) {
-                    bobTweens.forEach(function(b) {
-                        if (b.el === el) b.tween.kill();
-                    });
+            function killBob(el) {
+                bobTweens.forEach(function(b) { if (b.el === el) b.tween.kill(); });
+            }
+
+            function clampToView(el) {
+                var r = el.getBoundingClientRect();
+                var pad = 8;
+                var fixX = 0, fixY = 0;
+                var heroRect = heroEl.getBoundingClientRect();
+                if (r.left < pad) fixX = pad - r.left;
+                if (r.right > window.innerWidth - pad) fixX = (window.innerWidth - pad) - r.right;
+                if (r.top < heroRect.top + pad) fixY = (heroRect.top + pad) - r.top;
+                if (r.bottom > heroRect.bottom - pad) fixY = (heroRect.bottom - pad) - r.bottom;
+                if (fixX !== 0 || fixY !== 0) {
+                    gsap.to(el, { x: '+=' + fixX, y: '+=' + fixY, duration: 0.3, ease: 'power2.out', overwrite: 'auto' });
                 }
+            }
 
-                function clampToView(el) {
-                    var r = el.getBoundingClientRect();
-                    var pad = 8;
-                    var fixX = 0, fixY = 0;
-                    var heroRect = heroEl.getBoundingClientRect();
-                    if (r.left < pad) fixX = pad - r.left;
-                    if (r.right > window.innerWidth - pad) fixX = (window.innerWidth - pad) - r.right;
-                    if (r.top < heroRect.top + pad) fixY = (heroRect.top + pad) - r.top;
-                    if (r.bottom > heroRect.bottom - pad) fixY = (heroRect.bottom - pad) - r.bottom;
-                    if (fixX !== 0 || fixY !== 0) {
-                        gsap.to(el, { x: '+=' + fixX, y: '+=' + fixY, duration: 0.3, ease: 'power2.out', overwrite: 'auto' });
+            function checkCollisions(dragTarget) {
+                var r1 = dragTarget.getBoundingClientRect();
+                allFloaters.forEach(function(other) {
+                    if (other === dragTarget) return;
+                    var r2 = other.getBoundingClientRect();
+                    if (r1.left < r2.right && r1.right > r2.left && r1.top < r2.bottom && r1.bottom > r2.top) {
+                        var dx = (r2.left + r2.width / 2) - (r1.left + r1.width / 2);
+                        var dy = (r2.top + r2.height / 2) - (r1.top + r1.height / 2);
+                        var dist = Math.sqrt(dx * dx + dy * dy) || 1;
+                        var pushX = (dx / dist) * 40;
+                        var pushY = (dy / dist) * 40;
+                        var pushRot = (dx > 0 ? 1 : -1) * (6 + Math.random() * 6);
+                        killBob(other);
+                        gsap.to(other, { x: '+=' + pushX, y: '+=' + pushY, rotation: '+=' + pushRot, duration: 0.4, ease: 'power2.out', overwrite: 'auto', onComplete: function() { clampToView(other); } });
                     }
-                }
-
-                function checkCollisions(dragTarget) {
-                    var r1 = dragTarget.getBoundingClientRect();
-                    allFloaters.forEach(function(other) {
-                        if (other === dragTarget) return;
-                        var r2 = other.getBoundingClientRect();
-                        if (r1.left < r2.right && r1.right > r2.left &&
-                            r1.top < r2.bottom && r1.bottom > r2.top) {
-                            var dx = (r2.left + r2.width / 2) - (r1.left + r1.width / 2);
-                            var dy = (r2.top + r2.height / 2) - (r1.top + r1.height / 2);
-                            var dist = Math.sqrt(dx * dx + dy * dy) || 1;
-                            var pushX = (dx / dist) * 40;
-                            var pushY = (dy / dist) * 40;
-                            var pushRot = (dx > 0 ? 1 : -1) * (6 + Math.random() * 6);
-                            killBob(other);
-                            gsap.to(other, {
-                                x: '+=' + pushX,
-                                y: '+=' + pushY,
-                                rotation: '+=' + pushRot,
-                                duration: 0.4,
-                                ease: 'power2.out',
-                                overwrite: 'auto',
-                                onComplete: function() { clampToView(other); }
-                            });
-                        }
-                    });
-                }
-
-                allFloaters.forEach(function(el) {
-                    Draggable.create(el, {
-                        type: 'x,y',
-                        bounds: heroEl,
-                        edgeResistance: 0.85,
-                        onPress: function() { killBob(this.target); },
-                        onDrag: function() { checkCollisions(this.target); }
-                    });
                 });
             }
 
-            // Scroll parallax: hide pills/icons when leaving hero, restore on return
-            ScrollTrigger.create({
-                trigger: '.hero',
-                start: 'center top',
-                onLeave: function() {
-                    gsap.to(allFloaters || heroPills, { opacity: 0, duration: 0.4, ease: 'power2.in' });
-                    gsap.to(heroIcons, { opacity: 0, duration: 0.4, ease: 'power2.in' });
-                },
-                onEnterBack: function() {
-                    heroPills.forEach(function(p) { gsap.to(p, { opacity: 1, duration: 0.5 }); });
-                    heroIcons.forEach(function(ic) { gsap.to(ic, { opacity: 0.7, duration: 0.5 }); });
-                }
+            allFloaters.forEach(function(el) {
+                Draggable.create(el, {
+                    type: 'x,y',
+                    bounds: heroEl,
+                    edgeResistance: 0.85,
+                    onPress: function() { killBob(this.target); },
+                    onDrag: function() { checkCollisions(this.target); }
+                });
             });
+
+            // Scroll parallax: hide/show pills when leaving/entering hero (desktop only)
+            if (!isMobile) {
+                ScrollTrigger.create({
+                    trigger: '.hero',
+                    start: 'center top',
+                    onLeave: function() {
+                        gsap.to(allFloaters, { opacity: 0, duration: 0.4, ease: 'power2.in' });
+                    },
+                    onEnterBack: function() {
+                        heroPills.forEach(function(p) { gsap.to(p, { opacity: 1, duration: 0.5 }); });
+                        heroIcons.forEach(function(ic) { gsap.to(ic, { opacity: 0.7, duration: 0.5 }); });
+                    }
+                });
+            }
         }
 
         // --- Ecosystem title stagger ---
