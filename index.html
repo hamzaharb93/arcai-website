@@ -2526,30 +2526,38 @@
             });
         }
 
-        // --- Draggable pills + icons with collision (works on both mobile + desktop) ---
+        // --- Draggable pills + icons with momentum physics ---
         if (typeof Draggable !== 'undefined') {
             var allFloaters = isMobile ? Array.from(heroPills) : Array.from(heroPills).concat(Array.from(heroIcons));
             var heroEl = document.querySelector('.hero');
+
+            // Velocity tracking per element
+            var velData = new Map();
 
             function killBob(el) {
                 bobTweens.forEach(function(b) { if (b.el === el) b.tween.kill(); });
             }
 
+            function getBounds() {
+                var hr = heroEl.getBoundingClientRect();
+                return { left: hr.left + 8, top: hr.top + 8, right: hr.right - 8, bottom: hr.bottom - 8 };
+            }
+
             function clampToView(el) {
                 var r = el.getBoundingClientRect();
-                var pad = 8;
+                var b = getBounds();
                 var fixX = 0, fixY = 0;
-                var heroRect = heroEl.getBoundingClientRect();
-                if (r.left < pad) fixX = pad - r.left;
-                if (r.right > window.innerWidth - pad) fixX = (window.innerWidth - pad) - r.right;
-                if (r.top < heroRect.top + pad) fixY = (heroRect.top + pad) - r.top;
-                if (r.bottom > heroRect.bottom - pad) fixY = (heroRect.bottom - pad) - r.bottom;
+                if (r.left < b.left) fixX = b.left - r.left;
+                if (r.right > b.right) fixX = b.right - r.right;
+                if (r.top < b.top) fixY = b.top - r.top;
+                if (r.bottom > b.bottom) fixY = b.bottom - r.bottom;
                 if (fixX !== 0 || fixY !== 0) {
-                    gsap.to(el, { x: '+=' + fixX, y: '+=' + fixY, duration: 0.3, ease: 'power2.out', overwrite: 'auto' });
+                    gsap.to(el, { x: '+=' + fixX, y: '+=' + fixY, duration: 0.4, ease: 'elastic.out(0.5, 0.3)', overwrite: 'auto' });
                 }
             }
 
-            function checkCollisions(dragTarget) {
+            function checkCollisions(dragTarget, strength) {
+                strength = strength || 40;
                 var r1 = dragTarget.getBoundingClientRect();
                 allFloaters.forEach(function(other) {
                     if (other === dragTarget) return;
@@ -2558,22 +2566,92 @@
                         var dx = (r2.left + r2.width / 2) - (r1.left + r1.width / 2);
                         var dy = (r2.top + r2.height / 2) - (r1.top + r1.height / 2);
                         var dist = Math.sqrt(dx * dx + dy * dy) || 1;
-                        var pushX = (dx / dist) * 40;
-                        var pushY = (dy / dist) * 40;
-                        var pushRot = (dx > 0 ? 1 : -1) * (6 + Math.random() * 6);
+                        var pushX = (dx / dist) * strength;
+                        var pushY = (dy / dist) * strength;
+                        var pushRot = (dx > 0 ? 1 : -1) * (6 + Math.random() * 8);
                         killBob(other);
-                        gsap.to(other, { x: '+=' + pushX, y: '+=' + pushY, rotation: '+=' + pushRot, duration: 0.4, ease: 'power2.out', overwrite: 'auto', onComplete: function() { clampToView(other); } });
+                        gsap.to(other, {
+                            x: '+=' + pushX, y: '+=' + pushY, rotation: '+=' + pushRot,
+                            duration: 0.6, ease: 'power3.out', overwrite: 'auto',
+                            onComplete: function() { clampToView(other); }
+                        });
                     }
                 });
             }
 
             allFloaters.forEach(function(el) {
+                var vd = { prevX: 0, prevY: 0, prevTime: 0, vx: 0, vy: 0 };
+                velData.set(el, vd);
+
                 Draggable.create(el, {
                     type: 'x,y',
                     bounds: heroEl,
-                    edgeResistance: 0.85,
-                    onPress: function() { killBob(this.target); },
-                    onDrag: function() { checkCollisions(this.target); }
+                    edgeResistance: 0.7,
+                    onPress: function() {
+                        killBob(this.target);
+                        gsap.killTweensOf(this.target);
+                        var vd = velData.get(this.target);
+                        vd.prevX = this.x;
+                        vd.prevY = this.y;
+                        vd.prevTime = Date.now();
+                        vd.vx = 0;
+                        vd.vy = 0;
+                    },
+                    onDrag: function() {
+                        var vd = velData.get(this.target);
+                        var now = Date.now();
+                        var dt = (now - vd.prevTime) / 1000;
+                        if (dt > 0.001) {
+                            // Smoothed velocity (blend old + new)
+                            var newVx = (this.x - vd.prevX) / dt;
+                            var newVy = (this.y - vd.prevY) / dt;
+                            vd.vx = vd.vx * 0.3 + newVx * 0.7;
+                            vd.vy = vd.vy * 0.3 + newVy * 0.7;
+                            vd.prevX = this.x;
+                            vd.prevY = this.y;
+                            vd.prevTime = now;
+                        }
+                        checkCollisions(this.target, 40);
+                    },
+                    onDragEnd: function() {
+                        var target = this.target;
+                        var vd = velData.get(target);
+
+                        // Calculate throw distance from velocity
+                        var speed = Math.sqrt(vd.vx * vd.vx + vd.vy * vd.vy);
+                        if (speed < 50) return; // too slow, no momentum
+
+                        var friction = 0.92;
+                        var throwX = vd.vx * friction * 0.35;
+                        var throwY = vd.vy * friction * 0.35;
+                        var throwRot = (vd.vx > 0 ? 1 : -1) * Math.min(speed * 0.02, 15);
+                        var duration = Math.min(speed * 0.0015, 1.2);
+
+                        // Momentum glide
+                        var step = { progress: 0 };
+                        gsap.to(step, {
+                            progress: 1,
+                            duration: duration,
+                            ease: 'power3.out',
+                            onUpdate: function() {
+                                checkCollisions(target, 30);
+                            }
+                        });
+
+                        gsap.to(target, {
+                            x: '+=' + throwX,
+                            y: '+=' + throwY,
+                            rotation: '+=' + throwRot,
+                            duration: duration,
+                            ease: 'power3.out',
+                            overwrite: 'auto',
+                            onComplete: function() {
+                                clampToView(target);
+                                // Settle rotation back towards 0
+                                gsap.to(target, { rotation: gsap.getProperty(target, 'rotation') * 0.3, duration: 0.6, ease: 'elastic.out(0.4, 0.25)' });
+                            }
+                        });
+                    }
                 });
             });
 
