@@ -695,6 +695,98 @@
         .app-section--dental .check { background: rgba(26, 111, 232, 0.15); color: var(--dental-light); }
         .app-section--inpatient .check { background: rgba(196, 122, 30, 0.15); color: var(--inpatient-light); }
 
+        /* ── ARCAI OR pinned walkthrough ── */
+        .or-pinned { display: block; padding: 0 80px; }
+        .or-pin-inner {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1.08fr;
+            gap: 80px;
+            align-items: center;
+            max-width: 1300px;
+            margin: 0 auto;
+            width: 100%;
+            position: relative;
+            z-index: 1;
+        }
+        .or-steps { max-width: 520px; }
+        .or-step-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 28px;
+        }
+        .or-step {
+            padding: 15px 18px 15px 20px;
+            border-radius: 12px;
+            border-left: 3px solid transparent;
+            background: rgba(255, 255, 255, 0.02);
+            opacity: 0.4;
+            transition: opacity 0.4s ease, background 0.4s ease, border-color 0.4s ease, transform 0.4s ease;
+        }
+        .or-step.active {
+            opacity: 1;
+            background: rgba(13, 115, 119, 0.10);
+            border-left-color: var(--anesthesia-light);
+            transform: translateX(4px);
+        }
+        .or-step-num {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            color: var(--anesthesia-light);
+            opacity: 0.75;
+        }
+        .or-step-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin: 5px 0 6px;
+            color: var(--text-primary);
+        }
+        .or-step-desc {
+            font-size: 13.5px;
+            line-height: 1.6;
+            color: var(--text-secondary);
+        }
+        .or-visual { position: relative; }
+        .or-visual .ipad-pro { max-width: 640px; margin: 0 auto; }
+        .or-frame { width: 100%; display: block; }
+        .or-frame:not(:first-child) {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .or-progress {
+            display: flex;
+            gap: 7px;
+            margin: 22px auto 0;
+            justify-content: center;
+        }
+        .or-progress span {
+            width: 30px;
+            height: 3px;
+            border-radius: 2px;
+            background: rgba(255, 255, 255, 0.12);
+            transition: background 0.4s ease;
+        }
+        .or-progress span.active { background: var(--anesthesia-light); }
+        [data-theme="light"] .or-step { background: rgba(0, 0, 0, 0.02); }
+        [data-theme="light"] .or-step.active { background: rgba(13, 115, 119, 0.08); }
+        [data-theme="light"] .or-progress span { background: rgba(0, 0, 0, 0.1); }
+        @media (max-width: 900px) {
+            .or-pinned { padding: 80px 24px; }
+            .or-pin-inner { grid-template-columns: 1fr; gap: 40px; min-height: auto; }
+            .or-frame:not(:first-child) { display: none; }
+            .or-step { opacity: 1; }
+            .or-progress { display: none; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .or-frame:not(:first-child) { display: none; }
+            .or-step { opacity: 1; }
+        }
+
         /* iPad in app sections */
         .app-visual .ipad-pro {
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1960,29 +2052,48 @@
 </section>
 
 <!-- ═══ ANESTHESIA ═══ -->
-<section class="app-section app-section--anesthesia">
+<section class="app-section app-section--anesthesia or-pinned">
     <div class="app-section-glow"></div>
-    <div class="app-section-inner">
-        <div class="app-text reveal-left">
+    <div class="or-pin-inner">
+        <div class="or-steps">
             <div class="app-tag">Anesthesia</div>
             <div class="app-status app-status--pilot">In Clinic Pilot</div>
             <h3>ARCAI OR</h3>
-            <p>In many clinics, anesthesia documentation is still handwritten and fragmented. ARCAI OR gives your team a complete digital anesthesia record on iPad, with trends, medication support, and structured notes in one place.</p>
-            <ul class="app-features">
-                <li><span class="check">&#10003;</span>Trend view for vitals, not just single readings</li>
-                <li><span class="check">&#10003;</span>Early warning alerts when values start drifting toward risk</li>
-                <li><span class="check">&#10003;</span>Weight- and species-based dose support</li>
-                <li><span class="check">&#10003;</span>Voice documentation with structured output</li>
-                <li><span class="check">&#10003;</span>Generate anesthesia protocols based on patient assessment</li>
-                <li><span class="check">&#10003;</span>One-tap CPR emergency mode using the RECOVER 2024 protocol with live timers, weight-based drug doses, metronome, and full event logging</li>
-                <li><span class="check">&#10003;</span>Automatic appointment sync via API, so upcoming surgical cases appear in your dashboard without manual entry</li>
-            </ul>
+            <p>A complete digital anesthesia record on iPad — from pre-op assessment to live monitoring. Scroll through a real case.</p>
+            <div class="or-step-list">
+                <div class="or-step" data-step="0">
+                    <div class="or-step-num">01 · ASSESS</div>
+                    <div class="or-step-title">Patient overview &amp; AI risk</div>
+                    <div class="or-step-desc">A full digital record with AI-generated risk analysis and an anesthesia strategy tailored to the patient.</div>
+                </div>
+                <div class="or-step" data-step="1">
+                    <div class="or-step-num">02 · PLAN</div>
+                    <div class="or-step-title">Day plan, synced automatically</div>
+                    <div class="or-step-desc">Upcoming surgical cases appear via API — no manual entry. The whole team sees the day at a glance.</div>
+                </div>
+                <div class="or-step" data-step="2">
+                    <div class="or-step-num">03 · RECORD</div>
+                    <div class="or-step-title">Vitals, doses &amp; voice notes</div>
+                    <div class="or-step-desc">Trend view for vitals, weight- and species-based dose support, and voice documentation with structured output.</div>
+                </div>
+                <div class="or-step" data-step="3">
+                    <div class="or-step-num">04 · MONITOR</div>
+                    <div class="or-step-title">Live AI &amp; CPR mode</div>
+                    <div class="or-step-desc">Early-warning alerts when values drift toward risk, plus one-tap CPR emergency mode on the RECOVER 2024 protocol.</div>
+                </div>
+            </div>
         </div>
-        <div class="app-visual reveal-right" data-delay="150">
+        <div class="or-visual">
             <div class="ipad-pro">
                 <div class="ipad-screen">
-                    <img src="screenshots/anesthesia-patient-overview.jpeg" alt="ARCAI OR: Patient overview with AI-generated risk analysis and strategy" loading="lazy">
+                    <img class="or-frame" data-step="0" src="screenshots/anesthesia-patient-overview.jpeg" alt="ARCAI OR: Patient overview with AI-generated risk analysis and strategy">
+                    <img class="or-frame" data-step="1" src="screenshots/anesthesia-day-plan.jpeg" alt="ARCAI OR: Day plan with automatically synced surgical cases" loading="lazy">
+                    <img class="or-frame" data-step="2" src="screenshots/anesthesia-record-vitals.jpeg" alt="ARCAI OR: Recording vitals and doses with voice documentation" loading="lazy">
+                    <img class="or-frame" data-step="3" src="screenshots/anesthesia-monitor-ai.jpeg" alt="ARCAI OR: Live AI monitoring with early-warning alerts and CPR mode" loading="lazy">
                 </div>
+            </div>
+            <div class="or-progress">
+                <span class="active"></span><span></span><span></span><span></span>
             </div>
         </div>
     </div>
@@ -2632,7 +2743,7 @@
         }
 
         // --- App sections: GSAP ScrollTrigger ---
-        document.querySelectorAll('.app-section').forEach(function(section) {
+        document.querySelectorAll('.app-section:not(.or-pinned)').forEach(function(section) {
             var text = section.querySelector('.app-text');
             var visual = section.querySelector('.app-visual');
             var features = section.querySelectorAll('.app-features li');
@@ -2702,6 +2813,57 @@
                 });
             }
         });
+
+        // --- ARCAI OR pinned walkthrough ---
+        (function initORWalkthrough() {
+            var section = document.querySelector('.or-pinned');
+            if (!section) return;
+            var frames = section.querySelectorAll('.or-frame');
+            var steps = section.querySelectorAll('.or-step');
+            var dots = section.querySelectorAll('.or-progress span');
+            var n = frames.length;
+            if (!n) return;
+
+            var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            var smallScreen = window.matchMedia('(max-width: 900px)').matches;
+
+            // Default: first state active
+            gsap.set(frames, { opacity: 0 });
+            gsap.set(frames[0], { opacity: 1 });
+            steps.forEach(function (s, i) { s.classList.toggle('active', i === 0); });
+
+            if (reduce || smallScreen) {
+                // No pin on mobile / reduced-motion: show all steps, first frame only
+                steps.forEach(function (s) { s.classList.add('active'); });
+                return;
+            }
+
+            var current = 0;
+            function setActive(i) {
+                if (i === current || i < 0 || i >= n) return;
+                gsap.to(frames[current], { opacity: 0, duration: 0.45, ease: 'power2.out' });
+                gsap.to(frames[i], { opacity: 1, duration: 0.45, ease: 'power2.out' });
+                steps[current].classList.remove('active');
+                steps[i].classList.add('active');
+                if (dots[current]) dots[current].classList.remove('active');
+                if (dots[i]) dots[i].classList.add('active');
+                current = i;
+            }
+
+            ScrollTrigger.create({
+                trigger: '.or-pin-inner',
+                start: 'top top',
+                end: '+=' + ((n - 1) * 85) + '%',
+                pin: '.or-pin-inner',
+                pinSpacing: true,
+                scrub: true,
+                anticipatePin: 1,
+                onUpdate: function (self) {
+                    var idx = Math.min(n - 1, Math.floor(self.progress * n));
+                    setActive(idx);
+                }
+            });
+        })();
 
         // --- Scroll companions ---
         var dogEl = document.querySelector('.scroll-companion--dog');
