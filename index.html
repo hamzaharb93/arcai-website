@@ -258,6 +258,41 @@
 
         .hero > * { position: relative; z-index: 1; }
 
+        /* ── Animated ECG vitals line ── */
+        .hero-ecg {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 8%;
+            height: 220px;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0;
+        }
+        .hero-ecg-svg { width: 100%; height: 100%; display: block; }
+        .hero-ecg-base {
+            stroke: var(--anesthesia-light);
+            stroke-width: 2;
+            opacity: 0.22;
+        }
+        .hero-ecg-trace {
+            stroke: var(--anesthesia-light);
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            opacity: 1;
+        }
+        .hero-ecg-dot { fill: #EAFEFE; }
+        [data-theme="light"] .hero-ecg-base { stroke: var(--anesthesia); opacity: 0.28; }
+        [data-theme="light"] .hero-ecg-trace { stroke: var(--anesthesia); }
+        [data-theme="light"] .hero-ecg-dot { fill: var(--anesthesia); }
+        @media (max-width: 768px) {
+            .hero-ecg { height: 150px; bottom: 4%; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .hero-ecg-dot { display: none; }
+        }
+
         .hero-badge {
             display: inline-flex;
             align-items: center;
@@ -1853,27 +1888,19 @@
         <div class="hero-glow hero-glow--3"></div>
     </div>
 
-    <!-- Floating pills + icons (hidden on mobile) -->
-    <div class="hero-pills-container">
-        <div class="hero-pill hero-pill--teal" style="top: 18%; left: 7%; transform: rotate(-6deg);">ANESTHESIA</div>
-        <div class="hero-pill hero-pill--blue" style="top: 15%; right: 8%; transform: rotate(4deg);">DENTAL</div>
-        <div class="hero-pill hero-pill--amber" style="top: 52%; right: 5%; transform: rotate(-3deg);">INPATIENT</div>
-        <div class="hero-pill hero-pill--neutral" style="top: 34%; left: 4%; transform: rotate(5deg);">AI-POWERED</div>
-        <div class="hero-pill hero-pill--neutral" style="bottom: 20%; left: 10%; transform: rotate(-4deg);">iPadOS</div>
-        <div class="hero-pill hero-pill--neutral" style="bottom: 26%; right: 12%; transform: rotate(3deg);">ONE RECORD</div>
-
-        <div class="hero-icon-float" style="top: 26%; left: 20%;">
-            <svg viewBox="0 0 24 24"><circle cx="12" cy="17" r="3"/><circle cx="7.5" cy="10" r="2"/><circle cx="16.5" cy="10" r="2"/><circle cx="9.5" cy="5.5" r="1.8"/><circle cx="14.5" cy="5.5" r="1.8"/></svg>
-        </div>
-        <div class="hero-icon-float" style="top: 22%; right: 22%;">
-            <svg viewBox="0 0 24 24"><polyline points="2 12 6 12 8 4 12 20 14 12 16 12 18 8 20 12 22 12"/></svg>
-        </div>
-        <div class="hero-icon-float" style="bottom: 32%; left: 24%;">
-            <svg viewBox="0 0 24 24"><path d="M12 2c-2.5 0-4.5 1.5-5 4-.3 1.5-.5 3-.5 5 0 3 .5 7 2.5 9 .8.8 1.5-.5 2-2 .3-.8.5-1 1-1s.7.2 1 1c.5 1.5 1.2 2.8 2 2 2-2 2.5-6 2.5-9 0-2-.2-3.5-.5-5-.5-2.5-2.5-4-5-4z"/></svg>
-        </div>
-        <div class="hero-icon-float" style="bottom: 36%; right: 20%;">
-            <svg viewBox="0 0 24 24"><path d="M6 3v7a6 6 0 0 0 12 0V3"/><circle cx="19" cy="16" r="2"/><path d="M19 18v1a4 4 0 0 1-4 4h-2a4 4 0 0 1-4-4v-3"/></svg>
-        </div>
+    <!-- Animated ECG vitals line (hero centerpiece) -->
+    <div class="hero-ecg" aria-hidden="true">
+        <svg class="hero-ecg-svg" viewBox="0 0 1200 200" preserveAspectRatio="xMidYMid slice">
+            <defs>
+                <filter id="ecgGlow" x="-20%" y="-60%" width="140%" height="220%">
+                    <feGaussianBlur stdDeviation="3.5" result="b"/>
+                    <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+            </defs>
+            <path class="hero-ecg-base" fill="none"/>
+            <path class="hero-ecg-trace" fill="none" filter="url(#ecgGlow)"/>
+            <circle class="hero-ecg-dot" r="5" filter="url(#ecgGlow)"/>
+        </svg>
     </div>
 
     <div class="hero-badge">
@@ -2503,231 +2530,70 @@
     if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
         gsap.registerPlugin(ScrollTrigger);
 
-        // --- Hero pills + icons ---
-        var heroPills = document.querySelectorAll('.hero-pill');
-        var heroIcons = document.querySelectorAll('.hero-icon-float');
-        var isMobile = window.innerWidth <= 768;
-        var bobTweens = [];
+        // --- Hero ECG vitals line ---
+        (function initHeroECG() {
+            var wrap = document.querySelector('.hero-ecg');
+            if (!wrap) return;
+            var base = wrap.querySelector('.hero-ecg-base');
+            var trace = wrap.querySelector('.hero-ecg-trace');
+            var dot = wrap.querySelector('.hero-ecg-dot');
 
-        if (!isMobile) {
-            // Fade in pills (desktop — mobile pills are already opacity:1 via CSS)
-            gsap.to(heroPills, { opacity: 1, duration: 0.6, stagger: 0.1, delay: 1.2, ease: 'power2.out' });
-            gsap.to(heroIcons, { opacity: 0.7, duration: 0.6, stagger: 0.12, delay: 1.5, ease: 'power2.out' });
+            // Build a repeating PQRST waveform across the 1200x200 viewBox
+            var W = 1200, mid = 100, cycle = 200, d = '';
+            function pt(x, y) { return (d ? ' L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1); }
+            for (var x = -cycle; x < W + cycle; x += cycle) {
+                d += pt(x, mid);
+                d += pt(x + 30, mid);
+                d += pt(x + 45, mid - 14);   // P wave
+                d += pt(x + 60, mid);
+                d += pt(x + 92, mid);
+                d += pt(x + 100, mid + 12);  // Q
+                d += pt(x + 108, mid - 70);  // R spike
+                d += pt(x + 116, mid + 42);  // S
+                d += pt(x + 126, mid);
+                d += pt(x + 158, mid);
+                d += pt(x + 172, mid - 20);  // T wave
+                d += pt(x + 188, mid);
+            }
+            base.setAttribute('d', d);
 
-            // Idle bob for pills
-            heroPills.forEach(function(pill, i) {
-                var tw = gsap.to(pill, { y: '+=12', duration: 2.5 + i * 0.3, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 1.2 + i * 0.2 });
-                bobTweens.push({ el: pill, tween: tw });
-            });
-            // Idle bob for icons
-            heroIcons.forEach(function(icon, i) {
-                var tw = gsap.to(icon, { y: '+=8', x: '+=4', duration: 3 + i * 0.4, repeat: -1, yoyo: true, ease: 'sine.inOut', delay: 1.5 + i * 0.3 });
-                bobTweens.push({ el: icon, tween: tw });
-            });
-        }
+            var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            gsap.to(wrap, { opacity: 1, duration: 1.1, delay: 0.4, ease: 'power2.out' });
 
-        // --- Draggable pills + icons with momentum physics ---
-        if (typeof Draggable !== 'undefined') {
-            var allFloaters = isMobile ? Array.from(heroPills) : Array.from(heroPills).concat(Array.from(heroIcons));
-            var heroEl = document.querySelector('.hero');
-
-            // Velocity tracking per element
-            var velData = new Map();
-
-            function killBob(el) {
-                bobTweens.forEach(function(b) { if (b.el === el) b.tween.kill(); });
+            if (reduce) {
+                // Static full trace, no sweep
+                trace.setAttribute('d', d);
+                trace.style.opacity = 0.32;
+                return;
             }
 
-            function getBounds() {
-                var hr = heroEl.getBoundingClientRect();
-                return { left: hr.left, top: hr.top, right: hr.right, bottom: hr.bottom };
-            }
-
-            // Get element edges relative to hero bounds
-            function getEdges(el) {
-                var r = el.getBoundingClientRect();
-                var b = getBounds();
-                var cx = gsap.getProperty(el, 'x');
-                var cy = gsap.getProperty(el, 'y');
-                return {
-                    overLeft: b.left - r.left,
-                    overRight: r.right - b.right,
-                    overTop: b.top - r.top,
-                    overBottom: r.bottom - b.bottom,
-                    curX: cx, curY: cy
-                };
-            }
-
-            // Animate an element to a target with wall bounce
-            function throwWithBounce(el, targetX, targetY, vx, vy, duration, extraProps) {
-                var r = el.getBoundingClientRect();
-                var cx = gsap.getProperty(el, 'x');
-                var cy = gsap.getProperty(el, 'y');
-                var b = getBounds();
-                var w = r.width, h = r.height;
-
-                // Predict final position
-                var finalLeft = r.left + (targetX - cx);
-                var finalRight = r.right + (targetX - cx);
-                var finalTop = r.top + (targetY - cy);
-                var finalBottom = r.bottom + (targetY - cy);
-
-                var bounceX = false, bounceY = false;
-                var clampedX = targetX, clampedY = targetY;
-                var bounceVx = 0, bounceVy = 0;
-                var bounciness = 0.5;
-
-                // Check wall hits and calculate bounce
-                if (finalLeft < b.left) {
-                    clampedX = targetX + (b.left - finalLeft);
-                    bounceVx = Math.abs(vx) * bounciness;
-                    bounceX = true;
-                } else if (finalRight > b.right) {
-                    clampedX = targetX - (finalRight - b.right);
-                    bounceVx = -Math.abs(vx) * bounciness;
-                    bounceX = true;
-                }
-                if (finalTop < b.top) {
-                    clampedY = targetY + (b.top - finalTop);
-                    bounceVy = Math.abs(vy) * bounciness;
-                    bounceY = true;
-                } else if (finalBottom > b.bottom) {
-                    clampedY = targetY - (finalBottom - b.bottom);
-                    bounceVy = -Math.abs(vy) * bounciness;
-                    bounceY = true;
-                }
-
-                var props = { x: clampedX, y: clampedY, duration: duration * 0.5, ease: 'power2.out', overwrite: 'auto' };
-                if (extraProps) {
-                    for (var k in extraProps) props[k] = extraProps[k];
-                }
-
-                if (bounceX || bounceY) {
-                    // First: hit the wall
-                    props.onComplete = function() {
-                        // Then: bounce off with reduced energy
-                        var bounceDistX = bounceVx * 0.3;
-                        var bounceDistY = bounceVy * 0.3;
-                        var bx2 = gsap.getProperty(el, 'x') + bounceDistX;
-                        var by2 = gsap.getProperty(el, 'y') + bounceDistY;
-                        // Clamp bounce destination too
-                        var r2 = el.getBoundingClientRect();
-                        var nb = getBounds();
-                        if (r2.left + bounceDistX < nb.left) bx2 = gsap.getProperty(el, 'x') + (nb.left - r2.left);
-                        if (r2.right + bounceDistX > nb.right) bx2 = gsap.getProperty(el, 'x') + (nb.right - r2.right);
-                        if (r2.top + bounceDistY < nb.top) by2 = gsap.getProperty(el, 'y') + (nb.top - r2.top);
-                        if (r2.bottom + bounceDistY > nb.bottom) by2 = gsap.getProperty(el, 'y') + (nb.bottom - r2.bottom);
-
-                        var bounceRot = (bounceVx > 0 ? 1 : -1) * (3 + Math.random() * 5);
-                        gsap.to(el, {
-                            x: bx2, y: by2, rotation: '+=' + bounceRot,
-                            duration: duration * 0.6, ease: 'power3.out'
-                        });
-                    };
-                }
-
-                gsap.to(el, props);
-            }
-
-            function checkCollisions(dragTarget, strength) {
-                strength = strength || 40;
-                var r1 = dragTarget.getBoundingClientRect();
-                allFloaters.forEach(function(other) {
-                    if (other === dragTarget) return;
-                    var r2 = other.getBoundingClientRect();
-                    if (r1.left < r2.right && r1.right > r2.left && r1.top < r2.bottom && r1.bottom > r2.top) {
-                        var dx = (r2.left + r2.width / 2) - (r1.left + r1.width / 2);
-                        var dy = (r2.top + r2.height / 2) - (r1.top + r1.height / 2);
-                        var dist = Math.sqrt(dx * dx + dy * dy) || 1;
-                        var pushX = (dx / dist) * strength;
-                        var pushY = (dy / dist) * strength;
-                        var pushRot = (dx > 0 ? 1 : -1) * (6 + Math.random() * 8);
-                        killBob(other);
-                        var otherX = gsap.getProperty(other, 'x');
-                        var otherY = gsap.getProperty(other, 'y');
-                        throwWithBounce(other, otherX + pushX, otherY + pushY, pushX, pushY, 0.6, { rotation: '+=' + pushRot });
+            // Comet sweep: a bright fixed-length segment + dot tracks the waveform
+            var len = base.getTotalLength();
+            var tail = 240;       // length of the lit comet trail
+            var steps = 22;
+            var st = { pos: 0 };
+            gsap.to(st, {
+                pos: len,
+                duration: 7,
+                repeat: -1,
+                ease: 'none',
+                onUpdate: function () {
+                    var head = st.pos;
+                    var seg = '';
+                    for (var i = 0; i <= steps; i++) {
+                        var s = head - tail + (tail * i / steps);
+                        if (s < 0) s = 0;
+                        if (s > len) s = len;
+                        var p = base.getPointAtLength(s);
+                        seg += (i === 0 ? 'M' : 'L') + p.x.toFixed(1) + ' ' + p.y.toFixed(1);
                     }
-                });
-            }
-
-            allFloaters.forEach(function(el) {
-                var vd = { prevX: 0, prevY: 0, prevTime: 0, vx: 0, vy: 0 };
-                velData.set(el, vd);
-
-                Draggable.create(el, {
-                    type: 'x,y',
-                    bounds: heroEl,
-                    edgeResistance: 1,
-                    onPress: function() {
-                        killBob(this.target);
-                        gsap.killTweensOf(this.target);
-                        var vd = velData.get(this.target);
-                        vd.prevX = this.x;
-                        vd.prevY = this.y;
-                        vd.prevTime = Date.now();
-                        vd.vx = 0;
-                        vd.vy = 0;
-                    },
-                    onDrag: function() {
-                        var vd = velData.get(this.target);
-                        var now = Date.now();
-                        var dt = (now - vd.prevTime) / 1000;
-                        if (dt > 0.001) {
-                            // Smoothed velocity (blend old + new)
-                            var newVx = (this.x - vd.prevX) / dt;
-                            var newVy = (this.y - vd.prevY) / dt;
-                            vd.vx = vd.vx * 0.3 + newVx * 0.7;
-                            vd.vy = vd.vy * 0.3 + newVy * 0.7;
-                            vd.prevX = this.x;
-                            vd.prevY = this.y;
-                            vd.prevTime = now;
-                        }
-                        checkCollisions(this.target, 40);
-                    },
-                    onDragEnd: function() {
-                        var target = this.target;
-                        var vd = velData.get(target);
-
-                        var speed = Math.sqrt(vd.vx * vd.vx + vd.vy * vd.vy);
-                        if (speed < 50) return;
-
-                        var friction = 0.92;
-                        var rawThrowX = vd.vx * friction * 0.35;
-                        var rawThrowY = vd.vy * friction * 0.35;
-                        var throwRot = (vd.vx > 0 ? 1 : -1) * Math.min(speed * 0.02, 15);
-                        var duration = Math.min(speed * 0.0015, 1.2);
-
-                        var curX = gsap.getProperty(target, 'x');
-                        var curY = gsap.getProperty(target, 'y');
-
-                        // Collision checks during glide
-                        var step = { progress: 0 };
-                        gsap.to(step, {
-                            progress: 1, duration: duration, ease: 'power3.out',
-                            onUpdate: function() { checkCollisions(target, 30); }
-                        });
-
-                        // Throw with wall bounce
-                        throwWithBounce(target, curX + rawThrowX, curY + rawThrowY, rawThrowX, rawThrowY, duration, { rotation: '+=' + throwRot });
-                    }
-                });
+                    trace.setAttribute('d', seg);
+                    var h = base.getPointAtLength(Math.min(head, len));
+                    dot.setAttribute('cx', h.x);
+                    dot.setAttribute('cy', h.y);
+                }
             });
-
-            // Scroll parallax: hide/show pills when leaving/entering hero (desktop only)
-            if (!isMobile) {
-                ScrollTrigger.create({
-                    trigger: '.hero',
-                    start: 'center top',
-                    onLeave: function() {
-                        gsap.to(allFloaters, { opacity: 0, duration: 0.4, ease: 'power2.in' });
-                    },
-                    onEnterBack: function() {
-                        heroPills.forEach(function(p) { gsap.to(p, { opacity: 1, duration: 0.5 }); });
-                        heroIcons.forEach(function(ic) { gsap.to(ic, { opacity: 0.7, duration: 0.5 }); });
-                    }
-                });
-            }
-        }
+        })();
 
         // --- Ecosystem title stagger ---
         var ecoWraps = document.querySelectorAll('.eco-line-wrap');
