@@ -695,8 +695,11 @@
         .app-section--dental .check { background: rgba(26, 111, 232, 0.15); color: var(--dental-light); }
         .app-section--inpatient .check { background: rgba(196, 122, 30, 0.15); color: var(--inpatient-light); }
 
-        /* ── ARCAI OR pinned walkthrough ── */
-        .or-pinned { display: block; padding: 0 80px; }
+        /* ── Pinned app walkthroughs (OR, Dental) ── */
+        .or-pinned { display: block; padding: 0 80px; --walk-accent: var(--anesthesia-light); --walk-accent-soft: rgba(13, 115, 119, 0.10); }
+        .app-section--dental.or-pinned { --walk-accent: var(--dental-light); --walk-accent-soft: rgba(26, 111, 232, 0.10); }
+        .or-pinned--reverse .or-pin-inner { direction: rtl; }
+        .or-pinned--reverse .or-pin-inner > * { direction: ltr; }
         .or-pin-inner {
             min-height: 100vh;
             display: grid;
@@ -726,16 +729,16 @@
         }
         .or-step.active {
             opacity: 1;
-            background: rgba(13, 115, 119, 0.10);
-            border-left-color: var(--anesthesia-light);
+            background: var(--walk-accent-soft);
+            border-left-color: var(--walk-accent);
             transform: translateX(4px);
         }
         .or-step-num {
             font-family: 'JetBrains Mono', monospace;
             font-size: 11px;
             letter-spacing: 1.5px;
-            color: var(--anesthesia-light);
-            opacity: 0.75;
+            color: var(--walk-accent);
+            opacity: 0.85;
         }
         .or-step-title {
             font-size: 16px;
@@ -771,9 +774,9 @@
             background: rgba(255, 255, 255, 0.12);
             transition: background 0.4s ease;
         }
-        .or-progress span.active { background: var(--anesthesia-light); }
+        .or-progress span.active { background: var(--walk-accent); }
         [data-theme="light"] .or-step { background: rgba(0, 0, 0, 0.02); }
-        [data-theme="light"] .or-step.active { background: rgba(13, 115, 119, 0.08); }
+        [data-theme="light"] .or-step.active { background: var(--walk-accent-soft); }
         [data-theme="light"] .or-progress span { background: rgba(0, 0, 0, 0.1); }
         @media (max-width: 900px) {
             .or-pinned { padding: 80px 24px; }
@@ -858,14 +861,34 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 16px;
+            gap: 18px;
             padding: 24px 0;
-            opacity: 0.4;
+            opacity: 0.7;
         }
         .connector-line {
             width: 60px;
             height: 1px;
             background: linear-gradient(90deg, transparent, var(--text-muted), transparent);
+        }
+        /* Animated ECG heartbeat divider */
+        .ecg-line { width: 96px; height: 22px; flex-shrink: 0; overflow: visible; }
+        .ecg-line path { fill: none; vector-effect: non-scaling-stroke; }
+        .ecg-line-base { stroke: var(--text-muted); stroke-width: 1; opacity: 0.45; }
+        .ecg-line-pulse {
+            stroke: var(--anesthesia-light);
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            stroke-dasharray: 22 200;
+            filter: drop-shadow(0 0 3px rgba(20, 189, 189, 0.65));
+            animation: ecgPulse 2.6s linear infinite;
+        }
+        @keyframes ecgPulse {
+            from { stroke-dashoffset: 222; }
+            to   { stroke-dashoffset: 0; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .ecg-line-pulse { animation: none; opacity: 0; }
         }
         .connector-label {
             font-size: 10px;
@@ -1724,32 +1747,6 @@
             opacity: 0;
         }
 
-        /* ═══ SCROLL COMPANIONS ═══ */
-        .scroll-companion {
-            position: fixed;
-            bottom: 28px;
-            z-index: 100;
-            width: 72px;
-            height: 72px;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.5s ease, color 0.6s ease;
-            will-change: transform;
-            color: var(--anesthesia-light);
-        }
-        .scroll-companion--dog { left: 32px; }
-        .scroll-companion--cat { right: 32px; }
-        .scroll-companion svg {
-            width: 100%;
-            height: 100%;
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 1.2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-        }
-        .scroll-companion.visible { opacity: 1; }
-
         /* ═══ LIGHT MODE: NEW ELEMENTS ═══ */
         [data-theme="light"] .hero-mega {
             background: linear-gradient(135deg, var(--anesthesia) 0%, var(--dental) 40%, var(--inpatient) 100%);
@@ -1781,9 +1778,6 @@
         }
         [data-theme="light"] .hero-icon-float svg {
             stroke: var(--text-muted);
-        }
-        [data-theme="light"] .scroll-companion {
-            color: var(--anesthesia);
         }
 
         /* ═══ RESPONSIVE ═══ */
@@ -1848,7 +1842,6 @@
             .hero-icon-float {
                 display: none;
             }
-            .scroll-companion { display: none; }
             .hero-mega { font-size: clamp(60px, 16vw, 80px); letter-spacing: -3px; }
 
             .hero { padding: 130px 24px 60px; min-height: auto; }
@@ -2100,45 +2093,66 @@
 </section>
 
 <div class="app-connector reveal">
-    <div class="connector-line"></div>
+    <svg class="ecg-line" viewBox="0 0 120 24" preserveAspectRatio="none" aria-hidden="true">
+        <path class="ecg-line-base" d="M0 12 H46 l3 -7 l4 14 l4 -14 l3 7 H120"/>
+        <path class="ecg-line-pulse" d="M0 12 H46 l3 -7 l4 14 l4 -14 l3 7 H120"/>
+    </svg>
     <span class="connector-label">Connected Ecosystem</span>
-    <div class="connector-line"></div>
+    <svg class="ecg-line" viewBox="0 0 120 24" preserveAspectRatio="none" aria-hidden="true">
+        <path class="ecg-line-base" d="M0 12 H46 l3 -7 l4 14 l4 -14 l3 7 H120"/>
+        <path class="ecg-line-pulse" d="M0 12 H46 l3 -7 l4 14 l4 -14 l3 7 H120"/>
+    </svg>
 </div>
 
 <!-- HIGGSFIELD VIDEO PLACEHOLDER -->
 <!-- Insert scroll-triggered video here: <video autoplay muted loop playsinline src="apps-transition.mp4" style="width:100%;border-radius:20px;margin:-40px auto 40px;max-width:1100px;display:block;"></video> -->
 
 <!-- ═══ DENTAL ═══ -->
-<section class="app-section app-section--dental">
+<section class="app-section app-section--dental or-pinned or-pinned--reverse">
     <div class="app-section-glow"></div>
-    <div class="app-section-inner">
-        <div class="app-text reveal-right" data-delay="150">
+    <div class="or-pin-inner">
+        <div class="or-steps">
             <div class="app-tag">Dental</div>
             <div class="app-status app-status--development">In Development</div>
             <h3>ARCAI Dental</h3>
-            <p>Dental documentation is often incomplete or stuck in paper charts. ARCAI Dental brings AVDC-standard charting to iPad and keeps every tooth, every surface, and every finding in one place.</p>
-            <ul class="app-features">
-                <li><span class="check">&#10003;</span>Interactive dental charts for canine and feline dentitions</li>
-                <li><span class="check">&#10003;</span>Color-coded per-surface findings with staging</li>
-                <li><span class="check">&#10003;</span>Six-point periodontal probing depth grid</li>
-                <li><span class="check">&#10003;</span>Treatment plan support based on recorded findings</li>
-                <li><span class="check">&#10003;</span>Photo documentation with annotation tools</li>
-            </ul>
+            <p>AVDC-standard charting on iPad — every tooth, every surface, every finding in one place. Scroll through the workflow.</p>
+            <div class="or-step-list">
+                <div class="or-step" data-step="0">
+                    <div class="or-step-num">01 · CHART</div>
+                    <div class="or-step-title">Interactive AVDC charting</div>
+                    <div class="or-step-desc">Interactive dental charts for canine and feline dentitions, color-coded per-surface findings with staging, and a six-point periodontal probing depth grid.</div>
+                </div>
+                <div class="or-step" data-step="1">
+                    <div class="or-step-num">02 · PLAN</div>
+                    <div class="or-step-title">Findings, photos &amp; treatment plans</div>
+                    <div class="or-step-desc">Treatment-plan support based on recorded findings, plus photo documentation with annotation tools — all on the shared patient record.</div>
+                </div>
+            </div>
         </div>
-        <div class="app-visual reveal-left">
+        <div class="or-visual">
             <div class="ipad-pro">
                 <div class="ipad-screen">
-                    <img src="screenshots/dental-chart.jpeg" alt="ARCAI Dental: Interactive dental chart with per-tooth findings and probing depths" loading="lazy">
+                    <img class="or-frame" data-step="0" src="screenshots/dental-chart.jpeg" alt="ARCAI Dental: Interactive dental chart with per-tooth findings and probing depths">
+                    <img class="or-frame" data-step="1" src="screenshots/dental-dashboard.jpeg" alt="ARCAI Dental: Findings dashboard with treatment plan and photos" loading="lazy">
                 </div>
+            </div>
+            <div class="or-progress">
+                <span class="active"></span><span></span>
             </div>
         </div>
     </div>
 </section>
 
 <div class="app-connector reveal">
-    <div class="connector-line"></div>
+    <svg class="ecg-line" viewBox="0 0 120 24" preserveAspectRatio="none" aria-hidden="true">
+        <path class="ecg-line-base" d="M0 12 H46 l3 -7 l4 14 l4 -14 l3 7 H120"/>
+        <path class="ecg-line-pulse" d="M0 12 H46 l3 -7 l4 14 l4 -14 l3 7 H120"/>
+    </svg>
     <span class="connector-label">Shared Patient Record</span>
-    <div class="connector-line"></div>
+    <svg class="ecg-line" viewBox="0 0 120 24" preserveAspectRatio="none" aria-hidden="true">
+        <path class="ecg-line-base" d="M0 12 H46 l3 -7 l4 14 l4 -14 l3 7 H120"/>
+        <path class="ecg-line-pulse" d="M0 12 H46 l3 -7 l4 14 l4 -14 l3 7 H120"/>
+    </svg>
 </div>
 
 <!-- ═══ INPATIENT ═══ -->
@@ -2416,39 +2430,6 @@
         <button type="submit" class="btn-primary">Book a Demo</button>
     </form>
 </section>
-
-<!-- ═══ SCROLL COMPANIONS (hidden on mobile) ═══ -->
-<div class="scroll-companion scroll-companion--dog" aria-hidden="true">
-    <svg viewBox="0 0 56 48">
-        <!-- Dog: geometric minimal side profile, facing right -->
-        <path d="M6 36 C6 22 14 18 22 18 C28 18 33 14 35 10 C37 6 41 5 44 7 C46 8 46 11 44 13 C42 15 40 17 40 20 C44 22 48 27 48 34 L48 36" fill="none"/>
-        <path d="M14 36 C14 30 22 27 30 27 C38 27 44 30 44 36" fill="none"/>
-        <path d="M37 8 L35 1 L42 6" fill="none"/>
-        <circle cx="42" cy="10" r="1.2" fill="currentColor" stroke="none"/>
-        <path d="M6 32 C2 26 4 18 8 14" fill="none"/>
-        <line x1="18" y1="36" x2="18" y2="44"/>
-        <line x1="24" y1="36" x2="24" y2="44"/>
-        <line x1="38" y1="36" x2="38" y2="44"/>
-        <line x1="44" y1="36" x2="44" y2="44"/>
-    </svg>
-</div>
-<div class="scroll-companion scroll-companion--cat" aria-hidden="true">
-    <svg viewBox="0 0 56 48">
-        <!-- Cat: geometric minimal side profile, facing left -->
-        <path d="M50 36 C50 22 42 18 34 18 C28 18 23 14 21 10 C19 6 15 5 12 7 C10 8 10 11 12 13 C14 15 16 17 16 20 C12 22 8 27 8 34 L8 36" fill="none"/>
-        <path d="M42 36 C42 30 34 27 26 27 C18 27 12 30 12 36" fill="none"/>
-        <path d="M17 8 L13 0 L20 6" fill="none"/>
-        <path d="M23 9 L23 1 L27 7" fill="none"/>
-        <circle cx="14" cy="10" r="1.2" fill="currentColor" stroke="none"/>
-        <line x1="10" y1="13" x2="3" y2="11"/>
-        <line x1="10" y1="15" x2="3" y2="16"/>
-        <path d="M50 32 C54 24 52 16 55 11" fill="none"/>
-        <line x1="16" y1="36" x2="16" y2="44"/>
-        <line x1="22" y1="36" x2="22" y2="44"/>
-        <line x1="36" y1="36" x2="36" y2="44"/>
-        <line x1="42" y1="36" x2="42" y2="44"/>
-    </svg>
-</div>
 
 <!-- ═══ FOOTER ═══ -->
 <footer>
@@ -2815,14 +2796,13 @@
         });
 
         // --- ARCAI OR pinned walkthrough ---
-        (function initORWalkthrough() {
-            var section = document.querySelector('.or-pinned');
-            if (!section) return;
+        document.querySelectorAll('.or-pinned').forEach(function (section) {
+            var inner = section.querySelector('.or-pin-inner');
             var frames = section.querySelectorAll('.or-frame');
             var steps = section.querySelectorAll('.or-step');
             var dots = section.querySelectorAll('.or-progress span');
             var n = frames.length;
-            if (!n) return;
+            if (!n || !inner) return;
 
             var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
             var smallScreen = window.matchMedia('(max-width: 900px)').matches;
@@ -2841,8 +2821,8 @@
             var current = 0;
             function setActive(i) {
                 if (i === current || i < 0 || i >= n) return;
-                gsap.to(frames[current], { opacity: 0, duration: 0.45, ease: 'power2.out' });
-                gsap.to(frames[i], { opacity: 1, duration: 0.45, ease: 'power2.out' });
+                gsap.to(frames[current], { opacity: 0, duration: 0.5, ease: 'power2.inOut' });
+                gsap.to(frames[i], { opacity: 1, duration: 0.5, ease: 'power2.inOut' });
                 steps[current].classList.remove('active');
                 steps[i].classList.add('active');
                 if (dots[current]) dots[current].classList.remove('active');
@@ -2850,78 +2830,23 @@
                 current = i;
             }
 
+            // Generous scroll room per state + smoothed scrub = fluid, no racing.
+            // (No snap: snapping auto-scrolls and fights the user near boundaries.)
             ScrollTrigger.create({
-                trigger: '.or-pin-inner',
+                trigger: inner,
                 start: 'top top',
-                end: '+=' + ((n - 1) * 85) + '%',
-                pin: '.or-pin-inner',
+                end: '+=' + ((n - 1) * 110) + '%',
+                pin: inner,
                 pinSpacing: true,
-                scrub: true,
+                scrub: 1,
                 anticipatePin: 1,
                 onUpdate: function (self) {
-                    var idx = Math.min(n - 1, Math.floor(self.progress * n));
-                    setActive(idx);
+                    // small hysteresis so a state holds until clearly past the midpoint
+                    setActive(Math.min(n - 1, Math.floor(self.progress * n + 0.001)));
                 }
             });
-        })();
+        });
 
-        // --- Scroll companions ---
-        var dogEl = document.querySelector('.scroll-companion--dog');
-        var catEl = document.querySelector('.scroll-companion--cat');
-
-        if (dogEl && catEl) {
-            var heroSection = document.querySelector('.hero');
-            var ctaSection = document.querySelector('.cta-section');
-            var scrollTimeout;
-            var lastScrollY = 0;
-
-            var companionSections = [
-                { el: document.querySelector('.app-section--anesthesia'), color: 'var(--anesthesia-light)' },
-                { el: document.querySelector('.app-section--dental'), color: 'var(--dental-light)' },
-                { el: document.querySelector('.app-section--inpatient'), color: 'var(--inpatient-light)' }
-            ];
-
-            function updateCompanionColor(color) {
-                dogEl.style.color = color;
-                catEl.style.color = color;
-            }
-
-            window.addEventListener('scroll', function() {
-                var sy = window.scrollY;
-                var heroBot = heroSection.offsetTop + heroSection.offsetHeight;
-                var ctaTop = ctaSection.offsetTop;
-                var show = sy > heroBot - 200 && sy < ctaTop - 200;
-
-                dogEl.classList.toggle('visible', show);
-                catEl.classList.toggle('visible', show);
-
-                if (show) {
-                    var delta = sy - lastScrollY;
-                    var tilt = Math.min(Math.max(delta * 0.5, -15), 15);
-                    var bounce = Math.min(Math.abs(delta) * 0.15, 8);
-
-                    gsap.to(dogEl, { rotation: tilt, y: -bounce, duration: 0.3, ease: 'power2.out' });
-                    gsap.to(catEl, { rotation: -tilt, y: -bounce, duration: 0.3, ease: 'power2.out' });
-
-                    clearTimeout(scrollTimeout);
-                    scrollTimeout = setTimeout(function() {
-                        gsap.to(dogEl, { rotation: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.5)' });
-                        gsap.to(catEl, { rotation: 0, y: 0, duration: 0.6, ease: 'elastic.out(1, 0.5)' });
-                    }, 150);
-
-                    // Color change per active section
-                    companionSections.forEach(function(s) {
-                        if (s.el) {
-                            var rect = s.el.getBoundingClientRect();
-                            if (rect.top < window.innerHeight * 0.5 && rect.bottom > window.innerHeight * 0.5) {
-                                updateCompanionColor(s.color);
-                            }
-                        }
-                    });
-                }
-                lastScrollY = sy;
-            });
-        }
     }
 </script>
 
