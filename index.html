@@ -814,6 +814,40 @@
         .app-section--dental .app-section-inner { direction: rtl; }
         .app-section--dental .app-section-inner > * { direction: ltr; }
 
+        /* Station single-screen animation: monitor scan-line + scrub zoom */
+        .station-visual .ipad-screen { position: relative; }
+        .station-visual .ipad-screen img { will-change: transform; }
+        .station-scan {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: -24%;
+            height: 24%;
+            pointer-events: none;
+            z-index: 3;
+            background: linear-gradient(180deg, transparent, rgba(240, 169, 58, 0.05) 40%, rgba(240, 169, 58, 0.16) 50%, rgba(240, 169, 58, 0.05) 60%, transparent);
+            animation: stationScan 5s ease-in-out infinite;
+        }
+        .station-scan::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 2.5px;
+            background: linear-gradient(90deg, transparent, rgba(250, 200, 110, 0.95) 20%, rgba(250, 200, 110, 0.95) 80%, transparent);
+            box-shadow: 0 0 16px 2px rgba(240, 169, 58, 0.75);
+        }
+        @keyframes stationScan {
+            0%   { top: -28%; opacity: 0; }
+            12%  { opacity: 1; }
+            88%  { opacity: 1; }
+            100% { top: 100%; opacity: 0; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .station-scan { display: none; }
+        }
+
         /* Coming Soon */
         .coming-soon-placeholder {
             display: flex;
@@ -2172,10 +2206,11 @@
                 <li><span class="check">&#10003;</span>Automatic post-surgical import from ARCAI OR</li>
             </ul>
         </div>
-        <div class="app-visual reveal-right" data-delay="150">
+        <div class="app-visual reveal-right station-visual" data-delay="150">
             <div class="ipad-pro">
                 <div class="ipad-screen">
                     <img src="screenshots/inpatient.jpeg" alt="ARCAI Station: Inpatient ward management with treatment grid and patient status board" loading="lazy">
+                    <div class="station-scan" aria-hidden="true"></div>
                 </div>
             </div>
         </div>
@@ -2846,6 +2881,23 @@
                 }
             });
         });
+
+        // --- Station single-screen: subtle scrub zoom on the ward-board screenshot ---
+        (function initStationAnim() {
+            var img = document.querySelector('.station-visual .ipad-screen img');
+            if (!img) return;
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            gsap.fromTo(img, { scale: 1.03 }, {
+                scale: 1.12,
+                ease: 'none',
+                scrollTrigger: {
+                    trigger: '.app-section--inpatient',
+                    start: 'top bottom',
+                    end: 'bottom top',
+                    scrub: 1
+                }
+            });
+        })();
 
     }
 </script>
